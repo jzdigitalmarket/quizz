@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <title>Quiz de Gramática Interativo</title>
+    <style>
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: #f0f2f5; display: flex; justify-content: center; padding: 20px; }
+        #quiz-container { background: white; padding: 30px; border-radius: 12px; box-shadow: 0 8px 20px rgba(0,0,0,0.15); max-width: 650px; width: 100%; }
+        .header { display: flex; justify-content: space-between; margin-bottom: 20px; border-bottom: 2px solid #eee; padding-bottom: 10px; }
+        .opcao { display: block; width: 100%; padding: 12px; margin: 10px 0; border: 2px solid #e0e0e0; border-radius: 8px; cursor: pointer; text-align: left; font-size: 16px; transition: 0.2s; }
+        .opcao:hover { border-color: #007bff; background: #f8f9ff; }
+        .correta { background: #d4edda !important; border-color: #28a745 !important; }
+        .errada { background: #f8d7da !important; border-color: #dc3545 !important; }
+        #area-feedback { margin-top: 20px; padding: 15px; border-radius: 8px; background: #e9ecef; display: none; }
+        .controles { display: flex; gap: 10px; margin-top: 15px; }
+        button.acao { flex: 1; padding: 12px; border: none; border-radius: 6px; cursor: pointer; font-weight: bold; color: white; }
+        .btn-continuar { background: #28a745; }
+        .btn-parar { background: #dc3545; }
+        .hidden { display: none; }
+        .fonte-quiz {
+    margin-top: 20px;
+    padding-top: 15px;
+    border-top: 1px dashed #ccc;
+    text-align: center;
+    font-size: 14px;
+    color: #666;
+}
+.fonte-quiz a {
+    color: #007bff;
+    text-decoration: none;
+    word-break: break-all; /* Garante que o link não quebre o layout no celular */
+}
+.fonte-quiz a:hover {
+    text-decoration: underline;
+}
+    </style>
+</head>
+<body>
+
+<div id="quiz-container">
+    <div class="header">
+        <span>Pontos: <span id="score">0</span></span>
+        <span>Tempo: <span id="timer">15</span>s</span>
+
+<div class="fonte-quiz">
+    <strong>Referência:</strong> <br>
+    <a href="https://www.tudosaladeaula.com/2025/11/quiz-de-portugues-pronomes-para-o-5o-ano/" target="_blank">
+        https://www.tudosaladeaula.com/2025/11/quiz-de-portugues-pronomes-para-o-5o-ano/
+    </a>
+</div>
+        
+    </div>
+    
+    <div id="game-screen">
+        <h2 id="pergunta-texto">Carregando...</h2>
+        <div id="opcoes-container"></div>
+        
+        <div id="area-feedback">
+            <p id="texto-feedback"></p>
+            <hr>
+            <p><strong>Explicação:</strong> <span id="texto-explicacao"></span></p>
+            <div class="controles">
+                <button class="acao btn-continuar" onclick="proximaPergunta()">Continuar</button>
+                <button class="acao btn-parar" onclick="finalizarJogo()">Parar e Ver Placar</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="resultado-screen" class="hidden">
+        <h2>Desempenho Final</h2>
+        <p>Você acumulou <span id="final-score"></span> pontos.</p>
+        <button class="acao btn-continuar" style="width: auto" onclick="location.reload()">Reiniciar</button>
+    </div>
+</div>
+
+<script>
+    let perguntas = [];
+    let perguntaAtualIndex = 0;
+    let score = 0;
+    let tempo = 15;
+    let intervalo;
+
+    async function carregarPerguntas() {
+    try {
+        // Agora busca da sua nova API no Cloudflare
+        const response = await fetch('/api/perguntas');
+        
+        if (!response.ok) throw new Error('Erro ao carregar dados do D1');
+
+        const dadosBrutos = await response.json();
+        
+        // Como o SQLite armazena arrays como texto, precisamos converter de volta
+        perguntas = dadosBrutos.map(p => ({
+            ...p,
+            opcoes: typeof p.opcoes === 'string' ? JSON.parse(p.opcoes) : p.opcoes
+        }));
+
+        perguntas.sort(() => Math.random() - 0.5);
+        mostrarPergunta();
+        
+    } catch (error) {
+        console.error("Erro:", error);
+        document.getElementById('pergunta-texto').innerText = "Erro ao conectar com o banco de dados.";
+    }
+}
+// Inicia o processo
+carregarPerguntas();
+
+    function mostrarPergunta() {
+        if (perguntaAtualIndex >= perguntas.length) return finalizarJogo();
+        
+        document.getElementById('area-feedback').style.display = 'none';
+        document.getElementById('opcoes-container').classList.remove('hidden');
+        
+        const p = perguntas[perguntaAtualIndex];
+        document.getElementById('pergunta-texto').innerText = p.pergunta;
+        
+        const container = document.getElementById('opcoes-container');
+        container.innerHTML = '';
+        
+        p.opcoes.forEach((opcao, index) => {
+            const btn = document.createElement('button');
+            btn.className = 'opcao';
+            btn.innerText = opcao;
+            btn.onclick = () => validar(index, btn);
+            container.appendChild(btn);
+        });
+
+        tempo = 15;
+        iniciarTimer();
+    }
+
+    function iniciarTimer() {
+        document.getElementById('timer').innerText = tempo;
+        clearInterval(intervalo);
+        intervalo = setInterval(() => {
+            tempo--;
+            document.getElementById('timer').innerText = tempo;
+            if (tempo <= 0) validar(-1);
+        }, 1000);
+    }
+
+    function validar(index, elemento) {
+        clearInterval(intervalo);
+        const p = perguntas[perguntaAtualIndex];
+        const feedback = document.getElementById('area-feedback');
+        const textoF = document.getElementById('texto-feedback');
+        
+        // Bloquear novos cliques nas opções
+        const botoes = document.querySelectorAll('.opcao');
+        botoes.forEach(b => b.disabled = true);
+
+        if (index === p.correta) {
+            score += 10;
+            document.getElementById('score').innerText = score;
+            textoF.innerText = "✅ Resposta Correta!";
+            textoF.style.color = "green";
+            if(elemento) elemento.classList.add('correta');
+        } else {
+            textoF.innerText = "❌ Resposta Errada ou Tempo Esgotado!";
+            textoF.style.color = "red";
+            if(elemento) elemento.classList.add('errada');
+        }
+
+        document.getElementById('texto-explicacao').innerText = p.explicacao;
+        feedback.style.display = 'block';
+    }
+
+    function proximaPergunta() {
+        perguntaAtualIndex++;
+        mostrarPergunta();
+    }
+
+    function finalizarJogo() {
+        document.getElementById('game-screen').classList.add('hidden');
+        document.getElementById('resultado-screen').classList.remove('hidden');
+        document.getElementById('final-score').innerText = score;
+    }
+
+    iniciar();
+</script>
+</body>
+</html>
