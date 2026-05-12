@@ -140,32 +140,39 @@ carregarPerguntas();
         }, 1000);
     }
 
-    function validar(index, elemento) {
-        clearInterval(intervalo);
-        const p = perguntas[perguntaAtualIndex];
-        const feedback = document.getElementById('area-feedback');
-        const textoF = document.getElementById('texto-feedback');
-        
-        // Bloquear novos cliques nas opções
-        const botoes = document.querySelectorAll('.opcao');
-        botoes.forEach(b => b.disabled = true);
+    async function validar(index, elemento) {
+    clearInterval(intervalo);
+    const p = perguntas[perguntaAtualIndex];
+    
+    // Bloquear botões
+    const botoes = document.querySelectorAll('.opcao');
+    botoes.forEach(b => b.disabled = true);
 
-        if (index === p.correta) {
-            score += 10;
-            document.getElementById('score').innerText = score;
-            textoF.innerText = "✅ Resposta Correta!";
-            textoF.style.color = "green";
-            if(elemento) elemento.classList.add('correta');
-        } else {
-            textoF.innerText = "❌ Resposta Errada ou Tempo Esgotado!";
-            textoF.style.color = "red";
-            if(elemento) elemento.classList.add('errada');
-        }
+    // Chamada para a API de validação
+    const response = await fetch('/api/validar', {
+        method: 'POST',
+        body: JSON.stringify({ id: p.id, respostaUsuario: index })
+    });
+    const resultado = await response.json();
 
-        document.getElementById('texto-explicacao').innerText = p.explicacao;
-        feedback.style.display = 'block';
+    const feedback = document.getElementById('area-feedback');
+    const textoF = document.getElementById('texto-feedback');
+
+    if (resultado.correta) {
+        score += 10;
+        document.getElementById('score').innerText = score;
+        textoF.innerText = "✅ Resposta Correta!";
+        textoF.style.color = "green";
+        if(elemento) elemento.classList.add('correta');
+    } else {
+        textoF.innerText = "❌ Resposta Errada!";
+        textoF.style.color = "red";
+        if(elemento) elemento.classList.add('errada');
     }
 
+    document.getElementById('texto-explicacao').innerText = resultado.explicacao;
+    feedback.style.display = 'block';
+}
     function proximaPergunta() {
         perguntaAtualIndex++;
         mostrarPergunta();
