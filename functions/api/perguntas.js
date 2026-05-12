@@ -1,11 +1,11 @@
 // functions/api/perguntas.js
 export async function onRequest(context) {
-    // 'DB' é o nome da variável de ligação (binding) que você definirá no painel
     const { env } = context;
-    
     try {
+        // Selecionamos apenas id, pergunta e as opções. 
+        // A resposta correta e a explicação ficam protegidas no banco.
         const { results } = await env.DB.prepare(
-            "SELECT * FROM perguntas"
+            "SELECT id, pergunta, opcoes FROM perguntas"
         ).all();
 
         return new Response(JSON.stringify(results), {
