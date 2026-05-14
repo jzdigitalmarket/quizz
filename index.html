@@ -1,0 +1,372 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Simulado de Gramática - Itajaí 2026</title>
+    <style>
+        :root {
+            --primary: #007bff;
+            --secondary: #6c757d;
+            --success: #28a745;
+            --danger: #dc3545;
+            --light: #f8f9fa;
+            --dark: #343a40;
+            --bg: #f0f2f5;
+        }
+
+        body { 
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; 
+            background: var(--bg); 
+            display: flex; 
+            justify-content: center; 
+            padding: 20px; 
+            margin: 0;
+        }
+
+        #quiz-container { 
+            background: white; 
+            padding: 30px; 
+            border-radius: 12px; 
+            box-shadow: 0 8px 20px rgba(0,0,0,0.15); 
+            max-width: 650px; 
+            width: 100%; 
+        }
+
+        .hidden { display: none !important; }
+
+        /* Estilos da Home */
+        h1 { text-align: center; color: var(--primary); margin-top: 0; }
+        .subtitle { text-align: center; color: var(--secondary); margin-bottom: 30px; }
+
+        .stats-grid { 
+            display: grid; 
+            grid-template-columns: 1fr 1fr; 
+            gap: 15px; 
+            margin-bottom: 25px; 
+        }
+
+        .stat-card { 
+            background: #f8f9ff; 
+            border: 1px solid #d0d7de; 
+            padding: 20px; 
+            border-radius: 10px; 
+            text-align: center; 
+        }
+
+        .stat-value { 
+            display: block; 
+            font-size: 28px; 
+            font-weight: bold; 
+            color: var(--primary); 
+        }
+
+        .stat-label { 
+            font-size: 13px; 
+            color: var(--secondary); 
+            text-transform: uppercase; 
+            letter-spacing: 0.5px;
+        }
+
+        h3 { border-bottom: 2px solid var(--light); padding-bottom: 10px; color: var(--dark); }
+
+        .tema-item { 
+            display: flex; 
+            justify-content: space-between; 
+            align-items: center;
+            padding: 12px 0; 
+            border-bottom: 1px solid #eee; 
+            font-size: 15px; 
+        }
+
+        .tema-tag { 
+            background: #e2e8f0; 
+            color: var(--dark);
+            padding: 4px 12px; 
+            border-radius: 15px; 
+            font-size: 12px; 
+            font-weight: bold;
+        }
+
+        /* Estilos do Quiz */
+        .header { 
+            display: flex; 
+            justify-content: space-between; 
+            margin-bottom: 20px; 
+            border-bottom: 2px solid #eee; 
+            padding-bottom: 10px; 
+            font-weight: bold;
+        }
+
+        .opcao { 
+            display: block; 
+            width: 100%; 
+            padding: 15px; 
+            margin: 12px 0; 
+            border: 2px solid #e0e0e0; 
+            border-radius: 8px; 
+            cursor: pointer; 
+            text-align: left; 
+            font-size: 16px; 
+            transition: all 0.2s; 
+            background: white;
+        }
+
+        .opcao:hover { border-color: var(--primary); background: #f8f9ff; }
+        .opcao:disabled { cursor: not-allowed; }
+
+        .correta { background: #d4edda !important; border-color: var(--success) !important; color: #155724; }
+        .errada { background: #f8d7da !important; border-color: var(--danger) !important; color: #721c24; }
+
+        #area-feedback { 
+            margin-top: 20px; 
+            padding: 20px; 
+            border-radius: 8px; 
+            background: #f8f9fa; 
+            border-left: 5px solid var(--primary);
+        }
+
+        .controles { display: flex; gap: 10px; margin-top: 20px; }
+        
+        button.acao { 
+            flex: 1; 
+            padding: 15px; 
+            border: none; 
+            border-radius: 8px; 
+            cursor: pointer; 
+            font-weight: bold; 
+            color: white; 
+            font-size: 16px;
+            transition: opacity 0.2s;
+        }
+
+        button.acao:hover { opacity: 0.9; }
+        .btn-continuar { background: var(--success); }
+        .btn-parar { background: var(--secondary); }
+        .btn-principal { background: var(--primary); width: 100%; }
+
+        .fonte-quiz {
+            margin-top: 25px;
+            padding-top: 15px;
+            border-top: 1px dashed #ccc;
+            text-align: center;
+            font-size: 13px;
+            color: #888;
+        }
+        .fonte-quiz a { color: var(--primary); text-decoration: none; }
+    </style>
+</head>
+<body>
+
+<div id="quiz-container">
+    
+    <!-- TELA INICIAL (DASHBOARD) -->
+    <div id="home-screen">
+        <h1>Simulado Itajaí 2026</h1>
+        <p class="subtitle">Agente de Serviços Gerais • Gramática Aplicada</p>
+        
+        <div class="stats-grid">
+            <div class="stat-card">
+                <span class="stat-value" id="total-questoes">...</span>
+                <span class="stat-label">Questões</span>
+            </div>
+            <div class="stat-card">
+                <span class="stat-value" id="total-temas">...</span>
+                <span class="stat-label">Categorias</span>
+            </div>
+        </div>
+
+        <div id="temas-container">
+            <h3>Distribuição por Tema</h3>
+            <div id="temas-lista">
+                <p style="color: #999; text-align: center;">Carregando estatísticas...</p>
+            </div>
+        </div>
+
+        <button class="acao btn-principal" style="margin-top: 30px;" onclick="iniciarJogo()">
+            COMEÇAR SIMULADO AGORA
+        </button>
+
+        <div class="fonte-quiz">
+            <strong>Referência de Estudo:</strong> <br>
+            <a href="https://www.tudosaladeaula.com/2025/11/quiz-de-portugues-pronomes-para-o-5o-ano/" target="_blank">Portal Tudo Sala de Aula</a>
+        </div>
+    </div>
+
+    <!-- TELA DO JOGO -->
+    <div id="game-screen" class="hidden">
+        <div class="header">
+            <span>🏆 <span id="score">0</span> pts</span>
+            <span>⏱️ <span id="timer">15</span>s</span>
+        </div>
+        
+        <h2 id="pergunta-texto">Preparando pergunta...</h2>
+        <div id="opcoes-container"></div>
+        
+        <div id="area-feedback" class="hidden">
+            <h3 id="texto-feedback" style="margin-top: 0;"></h3>
+            <p><strong>Por que?</strong> <span id="texto-explicacao"></span></p>
+            <div class="controles">
+                <button class="acao btn-continuar" onclick="proximaPergunta()">Próxima Questão</button>
+                <button class="acao btn-parar" onclick="finalizarJogo()">Ver Resultado</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- TELA DE RESULTADO -->
+    <div id="resultado-screen" class="hidden">
+        <h2 style="text-align: center;">Fim do Simulado!</h2>
+        <div class="stat-card" style="margin: 20px 0;">
+            <span class="stat-label">Pontuação Final</span>
+            <span class="stat-value" id="final-score" style="font-size: 48px;">0</span>
+        </div>
+        <button class="acao btn-principal" onclick="location.reload()">REESTUDAR / REINICIAR</button>
+    </div>
+</div>
+
+<script>
+    let perguntas = [];
+    let perguntaAtualIndex = 0;
+    let score = 0;
+    let tempo = 15;
+    let intervalo;
+
+    // 1. CARREGAR DASHBOARD AO INICIAR
+    async function carregarDashboard() {
+        try {
+            const response = await fetch('/api/stats');
+            if (!response.ok) throw new Error();
+            const stats = await response.json();
+
+            document.getElementById('total-questoes').innerText = stats.total;
+            document.getElementById('total-temas').innerText = stats.temas.length;
+
+            const lista = document.getElementById('temas-lista');
+            lista.innerHTML = '';
+            
+            stats.temas.forEach(t => {
+                lista.innerHTML += `
+                    <div class="tema-item">
+                        <span>${t.categoria}</span>
+                        <span class="tema-tag">${t.quantidade}</span>
+                    </div>`;
+            });
+        } catch (e) {
+            console.error("Erro dashboard:", e);
+            // Fallback caso a API ainda não esteja pronta
+            document.getElementById('temas-lista').innerHTML = "<p>Conecte seu Worker ao D1 para ver as estatísticas.</p>";
+        }
+    }
+
+    // 2. BUSCAR PERGUNTAS DO D1
+    async function carregarPerguntas() {
+        try {
+            const response = await fetch('/api/perguntas');
+            const dadosBrutos = await response.json();
+            
+            perguntas = dadosBrutos.map(p => ({
+                ...p,
+                opcoes: typeof p.opcoes === 'string' ? JSON.parse(p.opcoes) : p.opcoes
+            }));
+
+            perguntas.sort(() => Math.random() - 0.5);
+            mostrarPergunta();
+        } catch (error) {
+            document.getElementById('pergunta-texto').innerText = "Erro ao carregar perguntas.";
+        }
+    }
+
+    function iniciarJogo() {
+        document.getElementById('home-screen').classList.add('hidden');
+        document.getElementById('game-screen').classList.remove('hidden');
+        carregarPerguntas();
+    }
+
+    function mostrarPergunta() {
+        if (perguntaAtualIndex >= perguntas.length) return finalizarJogo();
+        
+        document.getElementById('area-feedback').classList.add('hidden');
+        document.getElementById('opcoes-container').classList.remove('hidden');
+        
+        const p = perguntas[perguntaAtualIndex];
+        document.getElementById('pergunta-texto').innerText = p.pergunta;
+        
+        const container = document.getElementById('opcoes-container');
+        container.innerHTML = '';
+        
+        p.opcoes.forEach((opcao, index) => {
+            const btn = document.createElement('button');
+            btn.className = 'opcao';
+            btn.innerText = opcao;
+            btn.onclick = () => validar(index, btn);
+            container.appendChild(btn);
+        });
+
+        tempo = 15;
+        iniciarTimer();
+    }
+
+    function iniciarTimer() {
+        document.getElementById('timer').innerText = tempo;
+        clearInterval(intervalo);
+        intervalo = setInterval(() => {
+            tempo--;
+            document.getElementById('timer').innerText = tempo;
+            if (tempo <= 0) validar(-1);
+        }, 1000);
+    }
+
+    async function validar(index, elemento) {
+        clearInterval(intervalo);
+        const p = perguntas[perguntaAtualIndex];
+        const botoes = document.querySelectorAll('.opcao');
+        botoes.forEach(b => b.disabled = true);
+
+        try {
+            const response = await fetch('/api/validar', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ id: p.id, respostaUsuario: index })
+            });
+            const resultado = await response.json();
+
+            const areaFeedback = document.getElementById('area-feedback');
+            const textoF = document.getElementById('texto-feedback');
+
+            if (resultado.correta) {
+                score += 10;
+                document.getElementById('score').innerText = score;
+                textoF.innerText = "✅ Excelente!";
+                textoF.style.color = "var(--success)";
+                if(elemento) elemento.classList.add('correta');
+            } else {
+                textoF.innerText = "❌ Quase lá...";
+                textoF.style.color = "var(--danger)";
+                if(elemento) elemento.classList.add('errada');
+                // Destacar a correta se errou
+                botoes[resultado.corretaIndex]?.classList.add('correta');
+            }
+
+            document.getElementById('texto-explicacao').innerText = resultado.explicacao;
+            areaFeedback.classList.remove('hidden');
+        } catch (e) {
+            console.error("Erro validação");
+        }
+    }
+
+    function proximaPergunta() {
+        perguntaAtualIndex++;
+        mostrarPergunta();
+    }
+
+    function finalizarJogo() {
+        document.getElementById('game-screen').classList.add('hidden');
+        document.getElementById('resultado-screen').classList.remove('hidden');
+        document.getElementById('final-score').innerText = score;
+    }
+
+    // Inicialização
+    carregarDashboard();
+</script>
+</body>
+</html>
