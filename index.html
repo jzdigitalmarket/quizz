@@ -82,6 +82,31 @@
             } catch (e) { console.error(e); }
         }
 
+
+        async function iniciarQuiz() {
+    const btn = document.querySelector('.btn-start');
+    btn.innerText = "Carregando...";
+    
+    try {
+        const res = await fetch('/api/perguntas');
+        if (!res.ok) throw new Error("Erro ao buscar perguntas");
+        
+        perguntas = await res.json();
+        console.log("Perguntas carregadas:", perguntas); // Verifique no F12 se o array aparece aqui
+        
+        if (perguntas.length === 0) {
+            alert("Nenhuma pergunta encontrada no banco de dados.");
+            return;
+        }
+
+        document.getElementById('dashboard').style.display = 'none';
+        document.getElementById('quiz-container').style.display = 'block';
+        mostrarPergunta();
+    } catch (e) {
+        alert("Falha técnica: " + e.message);
+        btn.innerText = "Iniciar Simulado";
+    }
+}
         async function iniciarQuiz() {
             document.getElementById('dashboard').style.display = 'none';
             document.getElementById('quiz-container').style.display = 'block';
