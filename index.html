@@ -71,7 +71,7 @@
 
         async function carregarDashboard() {
             try {
-                const res = await fetch('/api/stats');
+                const res = await fetch('/function/api/stats');
                 const data = await res.json();
                 document.getElementById('total-questoes').innerText = data.total;
                 const lista = document.getElementById('lista-temas');
