@@ -7,7 +7,24 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/all.min.css">
     <style>
         :root { --primary: #2563eb; --accent: #f59e0b; --danger: #ef4444; --bg: #f8fafc; --text: #1e293b; }
-        body { font-family: 'Segoe UI', sans-serif; background: var(--bg); color: var(--text); margin: 0; display: flex; justify-content: center; align-items: center; min-height: 100vh; }
+        
+        body { 
+            font-family: 'Segoe UI', sans-serif; 
+            
+            /* CONFIGURAÇÃO DA IMAGEM DE FUNDO */
+            background-image: url('sua-imagem.jpg'); /* Substitua pelo caminho ou URL da sua imagem */
+            background-size: cover;                  /* Garante que a imagem cubra toda a tela sem distorcer */
+            background-position: center;            /* Centraliza a imagem na tela */
+            background-repeat: no-repeat;           /* Evita que a imagem fique se repetindo em mosaico */
+            background-attachment: fixed;           /* Mantém o fundo fixo caso a página tenha rolagem */
+            
+            color: var(--text); 
+            margin: 0; 
+            display: flex; 
+            justify-content: center; 
+            align-items: center; 
+            min-height: 100vh; 
+        }
         
         .container { width: 95%; max-width: 550px; background: white; padding: 1.2rem; border-radius: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.08); }
 
