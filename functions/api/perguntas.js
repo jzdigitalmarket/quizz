@@ -1,14 +1,17 @@
-// functions/api/perguntas.js
 export async function onRequest(context) {
     const { env } = context;
     try {
-        // Selecionamos apenas id, pergunta e as opções. 
-        // A resposta correta e a explicação ficam protegidas no banco.
         const { results } = await env.DB.prepare(
-            "SELECT id, pergunta, opcoes FROM perguntas"
+            "SELECT id, pergunta, opcoes, correta, explicacao, tema FROM perguntas"
         ).all();
 
-        return new Response(JSON.stringify(results), {
+        // Converte a string do banco em array real para o frontend
+        const formatados = results.map(p => ({
+            ...p,
+            opcoes: typeof p.opcoes === 'string' ? JSON.parse(p.opcoes) : p.opcoes
+        }));
+
+        return new Response(JSON.stringify(formatados), {
             headers: { "Content-Type": "application/json" }
         });
     } catch (e) {
