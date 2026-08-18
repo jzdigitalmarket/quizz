@@ -3,22 +3,22 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Simulado - Agente em Atividades Administrativas - Prefeitura de Itajaí</title>
+    <title>Simulado de Questões</title>
     <style>
         :root {
-            --primary: #1e3a8a;
+            --primary-color: #2563eb;
             --primary-hover: #1d4ed8;
-            --bg: #f8fafc;
+            --bg-color: #f8fafc;
             --card-bg: #ffffff;
-            --text: #0f172a;
+            --text-main: #0f172a;
             --text-muted: #64748b;
-            --border: #e2e8f0;
-            --success: #15803d;
-            --success-bg: #f0fdf4;
-            --danger: #b91c1c;
-            --danger-bg: #fef2f2;
-            --accent: #d97706;
-            --accent-bg: #fffbeb;
+            --correct-bg: #dcfce7;
+            --correct-border: #22c55e;
+            --correct-text: #15803d;
+            --incorrect-bg: #fee2e2;
+            --incorrect-border: #ef4444;
+            --incorrect-text: #b91c1c;
+            --border-color: #e2e8f0;
         }
 
         * {
@@ -29,10 +29,10 @@
         }
 
         body {
-            background-color: var(--bg);
-            color: var(--text);
-            line-height: 1.6;
+            background-color: var(--bg-color);
+            color: var(--text-main);
             padding: 20px;
+            line-height: 1.5;
         }
 
         .container {
@@ -41,102 +41,103 @@
         }
 
         header {
-            background: var(--primary);
-            color: white;
-            padding: 24px;
-            border-radius: 12px;
             margin-bottom: 24px;
-            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
         }
 
-        header h1 {
-            font-size: 1.6rem;
-            margin-bottom: 8px;
+        h1 {
+            font-size: 1.75rem;
+            margin-bottom: 16px;
         }
 
-        header p {
-            font-size: 0.95rem;
-            opacity: 0.9;
-        }
-
+        /* Seletor de Temas */
         .theme-selector {
             display: flex;
             gap: 10px;
-            overflow-x: auto;
-            padding-bottom: 12px;
-            margin-bottom: 24px;
+            flex-wrap: wrap;
+            margin-bottom: 20px;
         }
 
         .theme-btn {
-            background: white;
-            border: 1px solid var(--border);
+            background-color: #e2e8f0;
+            border: none;
             padding: 10px 16px;
             border-radius: 8px;
             cursor: pointer;
             font-weight: 600;
-            white-space: nowrap;
-            color: var(--text-muted);
-            transition: all 0.2s;
+            color: var(--text-main);
+            transition: background 0.2s, color 0.2s;
         }
 
         .theme-btn:hover {
-            border-color: var(--primary);
-            color: var(--primary);
+            background-color: #cbd5e1;
         }
 
         .theme-btn.active {
-            background: var(--primary);
-            color: white;
-            border-color: var(--primary);
+            background-color: var(--primary-color);
+            color: #ffffff;
         }
 
-        .dashboard {
-            background: white;
-            border-radius: 12px;
-            padding: 20px;
-            margin-bottom: 24px;
-            border: 1px solid var(--border);
+        /* Painel de Estatísticas */
+        .stats-panel {
             display: flex;
-            justify-content: space-around;
-            text-align: center;
+            justify-content: space-between;
+            align-items: center;
+            background: var(--card-bg);
+            padding: 16px 20px;
+            border-radius: 12px;
+            border: 1px solid var(--border-color);
+            margin-bottom: 24px;
         }
 
-        .stat-box .number {
-            font-size: 1.8rem;
-            font-weight: bold;
-            color: var(--primary);
+        .stat-item {
+            display: flex;
+            flex-direction: column;
         }
 
-        .stat-box .label {
+        .stat-label {
             font-size: 0.85rem;
             color: var(--text-muted);
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
         }
 
+        .stat-value {
+            font-size: 1.25rem;
+            font-weight: 700;
+        }
+
+        .btn-reset {
+            background-color: #f1f5f9;
+            border: 1px solid var(--border-color);
+            padding: 8px 14px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: 600;
+        }
+
+        .btn-reset:hover {
+            background-color: #e2e8f0;
+        }
+
+        /* Card da Questão */
         .question-card {
             background: var(--card-bg);
+            border: 1px solid var(--border-color);
             border-radius: 12px;
             padding: 24px;
             margin-bottom: 20px;
-            border: 1px solid var(--border);
-            box-shadow: 0 1px 3px rgba(0,0,0,0.05);
         }
 
         .question-header {
             display: flex;
             justify-content: space-between;
-            margin-bottom: 12px;
             font-size: 0.85rem;
             color: var(--text-muted);
-            font-weight: 600;
+            margin-bottom: 12px;
         }
 
         .question-text {
             font-size: 1.05rem;
             font-weight: 600;
-            margin-bottom: 20px;
-            color: var(--text);
+            margin-bottom: 16px;
         }
 
         .options-list {
@@ -147,126 +148,73 @@
         }
 
         .option-item {
-            border: 1px solid var(--border);
-            border-radius: 8px;
-            padding: 12px 16px;
-            cursor: pointer;
-            transition: all 0.2s;
             display: flex;
             align-items: flex-start;
             gap: 12px;
+            padding: 12px 16px;
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            cursor: pointer;
+            transition: background 0.15s, border-color 0.15s;
         }
 
-        .option-item:hover {
+        .option-item:hover:not(.disabled) {
             background-color: #f1f5f9;
-            border-color: #cbd5e1;
         }
 
         .option-letter {
-            font-weight: bold;
+            font-weight: 700;
             background: #e2e8f0;
-            width: 28px;
-            height: 28px;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            flex-shrink: 0;
+            border-radius: 4px;
+            padding: 2px 8px;
             font-size: 0.9rem;
         }
 
         .option-text {
-            padding-top: 2px;
-            font-size: 0.95rem;
+            flex: 1;
         }
 
-        /* Selection and Validation Styles */
-        .option-item.selected {
-            border-color: var(--primary);
-            background-color: #eff6ff;
+        /* Estados de Resposta */
+        .option-item.disabled {
+            cursor: default;
         }
 
         .option-item.correct {
-            border-color: var(--success) !important;
-            background-color: var(--success-bg) !important;
+            background-color: var(--correct-bg);
+            border-color: var(--correct-border);
+            color: var(--correct-text);
         }
 
         .option-item.correct .option-letter {
-            background-color: var(--success);
-            color: white;
+            background-color: var(--correct-border);
+            color: #ffffff;
         }
 
         .option-item.incorrect {
-            border-color: var(--danger) !important;
-            background-color: var(--danger-bg) !important;
+            background-color: var(--incorrect-bg);
+            border-color: var(--incorrect-border);
+            color: var(--incorrect-text);
         }
 
         .option-item.incorrect .option-letter {
-            background-color: var(--danger);
-            color: white;
+            background-color: var(--incorrect-border);
+            color: #ffffff;
         }
 
-        .option-item.disabled {
-            cursor: not-allowed;
-            opacity: 0.8;
-        }
-
+        /* Explicação */
         .explanation {
+            display: none;
             margin-top: 16px;
             padding: 16px;
-            border-radius: 8px;
-            background-color: var(--accent-bg);
-            border-left: 4px solid var(--accent);
-            font-size: 0.92rem;
-            display: none;
+            background-color: #f8fafc;
+            border-left: 4px solid var(--primary-color);
+            border-radius: 0 8px 8px 0;
+            font-size: 0.95rem;
         }
 
         .explanation h4 {
-            color: #92400e;
             margin-bottom: 6px;
-        }
-
-        .actions {
-            display: flex;
-            justify-content: space-between;
-            margin-top: 24px;
-        }
-
-        .btn {
-            background-color: var(--primary);
-            color: white;
-            border: none;
-            padding: 12px 24px;
-            border-radius: 8px;
-            font-weight: 600;
-            cursor: pointer;
-            transition: background 0.2s;
-        }
-
-        .btn:hover {
-            background-color: var(--primary-hover);
-        }
-
-        .btn-secondary {
-            background-color: #64748b;
-        }
-
-        .btn-secondary:hover {
-            background-color: #475569;
-        }
-
-        @media (max-width: 640px) {
-            .dashboard {
-                flex-direction: column;
-                gap: 12px;
-            }
-            .actions {
-                flex-direction: column;
-                gap: 10px;
-            }
-            .btn {
-                width: 100%;
-            }
+            color: var(--primary-color);
         }
     </style>
 </head>
@@ -274,37 +222,27 @@
 
 <div class="container">
     <header>
-        <h1>Simulado - Agente em Atividades Administrativas</h1>
-        <p>Prefeitura Municipal de Itajaí/SC • Edital 001/2026 (Banca FEPESE) • Lei Complementar 2.960/1995</p>
+        <h1>Simulado de Questões</h1>
+        <div class="theme-selector" id="themeSelector"></div>
     </header>
 
-    <div class="theme-selector" id="themeSelector">
-        <!-- Buttons injected dynamically -->
+    <div class="stats-panel">
+        <div class="stat-item">
+            <span class="stat-label">Respondidas</span>
+            <span class="stat-value" id="statAnswered">0 / 0</span>
+        </div>
+        <div class="stat-item">
+            <span class="stat-label">Acertos</span>
+            <span class="stat-value" id="statCorrect">0</span>
+        </div>
+        <div class="stat-item">
+            <span class="stat-label">Aproveitamento</span>
+            <span class="stat-value" id="statScore">0%</span>
+        </div>
+        <button class="btn-reset" onclick="resetCurrentTheme()">Reiniciar Tema</button>
     </div>
 
-    <div class="dashboard">
-        <div class="stat-box">
-            <div class="number" id="statAnswered">0 / 0</div>
-            <div class="label">Respondidas</div>
-        </div>
-        <div class="stat-box">
-            <div class="number" id="statCorrect">0</div>
-            <div class="label">Acertos</div>
-        </div>
-        <div class="stat-box">
-            <div class="number" id="statScore">0%</div>
-            <div class="label">Aproveitamento</div>
-        </div>
-    </div>
-
-    <div id="quizContainer">
-        <!-- Questions rendered here -->
-    </div>
-
-    <div class="actions">
-        <button class="btn btn-secondary" onclick="resetCurrentTheme()">Reiniciar / Embaralhar Tema</button>
-        <button class="btn" onclick="window.scrollTo({top: 0, behavior: 'smooth'})">Voltar ao Topo</button>
-    </div>
+    <div id="quizContainer"></div>
 </div>
 
 <script>
@@ -471,7 +409,7 @@ const quizData = [
             },
             {
                 id: "t1_q14",
-                text: "O retorno do servidor estável ao cargo anteriormente ocupado em decorrência de inabilitado em estágio probatório relativo a outro cargo denomina-se:",
+                text: "O retorno do servidor estável ao cargo anteriormente ocupado em decorrência de inabilitação em estágio probatório relativo a outro cargo denomina-se:",
                 options: [
                     "Recondução.",
                     "Reintegração.",
@@ -677,7 +615,7 @@ const quizData = [
                     "Arquivo Ativo."
                 ],
                 correct: 0,
-                explanation: "Fundamentação: Arquivologia. O arquivo intermediário (2ª idade) custodeia documentos oriundos do corrente que aguardam destinação final."
+                explanation: "Fundamentação: Arquivologia. O arquivo intermediário (2ª idade) custodia documentos oriundos do corrente que aguardam destinação final."
             },
             {
                 id: "t2_q11",
@@ -707,1249 +645,157 @@ const quizData = [
                 id: "t2_q13",
                 text: "O método de arquivamento GEOGRÁFICO ordena os documentos pelo local ou procedência. Ao organizar pastas por cidade e estado, a regra correta indica ordenar:",
                 options: [
-                    "Primeiro a cidade, seguida do Estado e País.",
+                    "Primeiro a Cidade, seguida do Estado e País.",
                     "Primeiro o Estado, depois a Cidade e em seguida o Nome do correspondente.",
-                    "O nome da pessoa primeiro e a cidade ao lado.",
-                    "Ordem aleatória por CEP."
+                    "Apenas pelo código telefônico DDD.",
+                    "Ordem alfabética do bairro, ignorando a cidade."
                 ],
                 correct: 1,
-                explanation: "Fundamentação: Regras de Arquivamento Geográfico. Na organização por cidades, ordena-se o Estado, depois a Cidade e depois o correspondente."
-            },
-            {
-                id: "t2_q14",
-                text: "Na expedição de cartas e ofícios, qual o elemento obrigatoriamente presente no cabeçalho padronizado da Prefeitura de Itajaí?",
-                options: [
-                    "Timbre oficial do Município / Brasão e identificação do órgão.",
-                    "Assinatura do destinatário.",
-                    "Lista de presença de servidores.",
-                    "Número de telefone pessoal do digitador."
-                ],
-                correct: 0,
-                explanation: "Fundamentação: Padronização de Documentos Oficiais. Todo documento oficial inicia com o cabeçalho/timbre institucional."
-            },
-            {
-                id: "t2_q15",
-                text: "O termo arquivístico 'Guia de Transferência' refere-se ao documento que acompanha os papéis que migram do:",
-                options: [
-                    "Arquivo Corrente para o Arquivo Intermediário.",
-                    "Arquivo Intermediário para a Eliminação direta sem registro.",
-                    "Setor privado para o setor público.",
-                    "Arquivo Permanente para o Arquivo Corrente."
-                ],
-                correct: 0,
-                explanation: "Fundamentação: Arquivologia. Transferência é a passagem de documentos do arquivo corrente para o intermediário."
-            },
-            {
-                id: "t2_q16",
-                text: "Qual das alternativas contém uma característica fundamental da linguagem dos textos administrativos oficiais?",
-                options: [
-                    "Uso abundante de gírias e regionalismos para aproximar do leitor.",
-                    "Impessoalidade, clareza, concisão e observância da norma-padrão da gramática.",
-                    "Subjetividade e opacidade nas frases para resguardar a chefia.",
-                    "Uso exclusivo de termos em idioma estrangeiro."
-                ],
-                correct: 1,
-                explanation: "Fundamentação: Redação Oficial. Impessoalidade, clareza, concisão, formalidade e correção gramatical são os pilares da redação pública."
-            },
-            {
-                id: "t2_q17",
-                text: "A ata é um documento de registro administrativo utilizado para:",
-                options: [
-                    "Resumir e registrar com fidelidade as ocorrências, deliberações e debates de uma reunião ou assembleia.",
-                    "Solicitar a compra de equipamentos de escritório.",
-                    "Promover um servidor público de classe funcional.",
-                    "Notificar o contribuinte sobre débitos de IPTU."
-                ],
-                correct: 0,
-                explanation: "Fundamentação: Redação Oficial. A Ata é a síntese escrita do que se passou em uma reunião oficial."
-            },
-            {
-                id: "t2_q18",
-                text: "O método de arquivamento DÍGITO-TERMINAL é ideal para grandes massas documentais (como prontuários ou cadastros numéricos). Ele organiza os números considerando:",
-                options: [
-                    "Os números da esquerda para a direita em ordem crescente pura.",
-                    "Os dois últimos dígitos (grupo final), depois o grupo do meio e por fim os primeiros números.",
-                    "Apenas o primeiro dígito da esquerda.",
-                    "A quantidade total de letras do nome."
-                ],
-                correct: 1,
-                explanation: "Fundamentação: Métodos de Arquivamento Numérico. O método dígito-terminal agrupa os documentos pelos dois últimos dígitos, reduzindo erros de intercalação."
-            },
-            {
-                id: "t2_q19",
-                text: "O que caracteriza a destruição mecânica ou fragmentação de documentos públicos cuja eliminação foi devidamente autorizada por edital de eliminação?",
-                options: [
-                    "Incineração clandestina.",
-                    "Descarte / Eliminação documental formalmente registrada em ata da Comissão de Avaliação.",
-                    "Furto de papéis de rascunho.",
-                    "Reciclagem sem autorização da autoridade."
-                ],
-                correct: 1,
-                explanation: "Fundamentação: Legislação Arquivística. A eliminação exige rigor formal com edital de eliminação e termo assinado pela comissão de avaliação de documentos."
-            },
-            {
-                id: "t2_q20",
-                text: "O documento normativo expedido por dirigentes de órgãos públicos para dar instruções sobre a execução de serviços e aplicação de leis no âmbito interno chama-se:",
-                options: [
-                    "Instrução Normativa ou Portaria.",
-                    "Certidão de nascimento.",
-                    "Aviso de recebimento postal.",
-                    "Atestado vacinal."
-                ],
-                correct: 0,
-                explanation: "Fundamentação: Atos Administrativos Normativos. Portarias e Instruções Normativas expressam ordens e orientações internas."
-            }
-        ]
-    },
-    {
-        themeId: "t3",
-        themeName: "3. Atendimento ao Público e Comunicação",
-        questions: [
-            {
-                id: "t3_q1",
-                text: "No atendimento ao público em repartição municipal, a urbanidade e o respeito são deveres morais e funcionais do Agente Administrativo. O que se entende por atendimento com urbanidade?",
-                options: [
-                    "Acelerar o atendimento dispensando cumprimentos ou orientações detalhadas.",
-                    "Tratar o cidadão de forma cortês, civilizada, atenciosa e sem preconceitos.",
-                    "Dar preferência de atendimento a parentes e conhecidos na fila.",
-                    "Exigir que o cidadão se comunique usando linguagem jurídica técnica."
-                ],
-                correct: 1,
-                explanation: "Fundamentação: Ética no Serviço Público e LC 2.960/95. Urbanidade significa cortesia, civilidade, respeito e empatia no trato com o público."
-            },
-            {
-                id: "t3_q2",
-                text: "Ao atender um cidadão visivelmente irritado com um atraso na concessão de um alvará na Prefeitura, o Agente Administrativo deve:",
-                options: [
-                    "Responder com o mesmo tom de voz alterado para impor autoridade.",
-                    "Manter a calma, escutar ativamente o problema, demonstrar empatia e orientar os procedimentos cabíveis com clareza.",
-                    "Recusar-se a conversar e mandar o cidadão procurar a polícia.",
-                    "Prometer a resolução imediata mesmo sabendo que não possui competência para tal."
-                ],
-                correct: 1,
-                explanation: "Fundamentação: Relações Interpessoais e Atendimento. A escuta ativa, o controle emocional e a clareza nas orientações desarmam conflitos."
-            },
-            {
-                id: "t3_q3",
-                text: "Nos termos da Lei Federal nº 10.048/2000 (Lei de Prioridade de Atendimento), qual dos grupos abaixo tem direito a atendimento prioritário nas repartições públicas?",
-                options: [
-                    "Servidores públicos de outros municípios em viagem de lazer.",
-                    "Pessoas com deficiência, idosos (com idade igual ou superior a 60 anos), gestantes, lactantes, pessoas com crianças de colo e autistas.",
-                    "Empresários locais que pagam elevados impostos municipais.",
-                    "Candidatos inscritos em concursos públicos do município."
-                ],
-                correct: 1,
-                explanation: "Fundamentação: Lei nº 10.048/2000 e legislação correlata. Assegura atendimento prioritário aos públicos vulneráveis e idosos."
-            },
-            {
-                id: "t3_q4",
-                text: "Na comunicação interpessoal dentro da equipe de trabalho, a barreira de comunicação decorrente do uso de jargões técnicos excessivos que o interlocutor não consegue compreender denomina-se:",
-                options: [
-                    "Barreira Semântica.",
-                    "Barreira Física.",
-                    "Barreira Fisiológica.",
-                    "Barreira Geográfica."
-                ],
-                correct: 0,
-                explanation: "Fundamentação: Teoria da Comunicação. Barreira semântica ocorre quando o significado do código/palavra não é compreendido pelo receptor."
-            },
-            {
-                id: "t3_q5",
-                text: "Em relação à comunicação telefônica institucional no serviço público, assinale a atitude CORRETA do atendente:",
-                options: [
-                    "Atender dizendo apenas 'Alô?' e aguardar quem fala se identificar.",
-                    "Identificar a repartição pública municipal, saudar o interlocutor e dizer seu próprio nome e cargo de forma clara.",
-                    "Deixar o telefone tocando indeterminadamente enquanto conversa com colegas de sala.",
-                    "Passar informações sigilosas sobre terceiros sem prévia confirmação de identidade."
-                ],
-                correct: 1,
-                explanation: "Fundamentação: Boas Práticas de Atendimento Telefônico no Setor Público. A identificação formal do órgão e do servidor transmite profissionalismo e transparência."
-            },
-            {
-                id: "t3_q6",
-                text: "O conceito de 'Escuta Ativa' no atendimento ao cidadão envolve:",
-                options: [
-                    "Ouvir passivamente enquanto realiza digitação de outro relatório sem olhar para o cidadão.",
-                    "Prestar atenção total na fala do cidadão, fazendo perguntas esclarecedoras e confirmando a compreensão da demanda.",
-                    "Interromper o cidadão constantemente para corrigir seu vocabulário gramatical.",
-                    "Concordar com tudo o que o cidadão diz, mesmo que contrarie as leis do município."
-                ],
-                correct: 1,
-                explanation: "Fundamentação: Gestão do Atendimento e Comunicação. Escuta ativa exige concentração, empatia e validação da mensagem do interlocutor."
-            },
-            {
-                id: "t3_q7",
-                text: "A comunicação interna eficácia nas organizações públicas busca:",
-                options: [
-                    "Estimular a circulação de boatos e fofocas no ambiente de trabalho.",
-                    "Alinhar as diretrizes, integrar setores, agilizar a transmissão de informações oficiais e fortalecer a cultura de cooperação.",
-                    "Manter as decisões da chefia em segredo para os funcionários de apoio.",
-                    "Centralizar todas as tarefas em um único servidor."
-                ],
-                correct: 1,
-                explanation: "Fundamentação: Comunicação Organizacional. A comunicação interna promove alinhamento institucional e eficiência nas operações."
-            },
-            {
-                id: "t3_q8",
-                text: "O feedback no ambiente de trabalho é um instrumento de comunicação utilizado para:",
-                options: [
-                    "Criticar pessoalmente e expor as fraquezas dos colegas publicamente.",
-                    "Fornecer informações construtivas sobre o desempenho ou comportamento com vista à melhoria contínua.",
-                    "Elogiar apenas os funcionários mais próximos da chefia.",
-                    "Substituir os relatórios oficiais de avaliação de desempenho."
-                ],
-                correct: 1,
-                explanation: "Fundamentação: Gestão de Pessoas e Comunicação. O feedback orienta, alinha expectativas e desenvolve as competências da equipe."
-            },
-            {
-                id: "t3_q9",
-                text: "Ao lidar com o atendimento a pessoas com deficiência auditiva (surdas) que não se comunicam verbalmente, a conduta recomendada para o servidor é:",
-                options: [
-                    "Falar gritando bem alto na direção da pessoa.",
-                    "Utilizar recursos visuais, escrita, gestos simples e, se disponível, acionar o serviço de intérprete de LIBRAS do município.",
-                    "Encaminhar a pessoa para fora da repartição por falta de condições de fala.",
-                    "Pedir para um acompanhante decidir pelo cidadão sem consultá-lo."
-                ],
-                correct: 1,
-                explanation: "Fundamentação: Acessibilidade e Atendimento Inclusivo (Lei nº 13.146/2015). A comunicação acessível garante a autonomia da pessoa com deficiência."
-            },
-            {
-                id: "t3_q10",
-                text: "Em um canal de atendimento digital ou e-mail da Prefeitura de Itajaí, qual é o tempo de resposta ideal do servidor público perante o cidadão?",
-                options: [
-                    "Ignorar o e-mail até que o cidadão venha presencialmente.",
-                    "Responder com presteza no menor prazo possível dentro dos limites legais estipulados para a solicitação.",
-                    "Demorar 90 dias úteis para responder qualquer mensagem simples.",
-                    "Responder com mensagens automáticas sem sanar a dúvida."
-                ],
-                correct: 1,
-                explanation: "Fundamentação: Eficiência na Gestão Pública e LAI. A presteza e o cumprimento de prazos são fundamentais na prestação de serviços ao cidadão."
-            },
-            {
-                id: "t3_q11",
-                text: "Assinale a alternativa que apresenta um comportamento que FAVORECE o trabalho em equipe e o bom clima organizacional:",
-                options: [
-                    "Retensão de informações essenciais para se tornar indispensável no setor.",
-                    "Empatia, comunicação clara, respeito à diversidade de opiniões e cooperação mútua.",
-                    "Transferência recorrente de suas responsabilidades para os estagiários.",
-                    "Competição predatória com os colegas do mesmo nível funcional."
-                ],
-                correct: 1,
-                explanation: "Fundamentação: Relações Interpessoais. O trabalho colaborativo exige empatia, respeito e compartilhamento responsável de informações."
-            },
-            {
-                id: "t3_q12",
-                text: "O ato de interpretar as necessidades do cidadão e colocá-lo no centro do planejamento das rotinas públicas refere-se à orientação para:",
-                options: [
-                    "A burocracia engessada.",
-                    "O foco no cidadão / Usuário do serviço público.",
-                    "O interesse privado do servidor.",
-                    "O mero cumprimento formal de horários."
-                ],
-                correct: 1,
-                explanation: "Fundamentação: Gestão Pública Contemporânea. A administração voltada ao cidadão busca excelência e satisfação no atendimento."
-            },
-            {
-                id: "t3_q13",
-                text: "Qual das opções representa uma barreira FÍSICA no atendimento presencial ao público?",
-                options: [
-                    "Preconceito do atendente.",
-                    "Balcões muito elevados, barulhos intensos no ambiente e vidros blindados que abafam o som da voz.",
-                    "Falta de conhecimento da lei municipal pelo servidor.",
-                    "Divergência de valores culturais."
-                ],
-                correct: 1,
-                explanation: "Fundamentação: Comunicação e Acessibilidade. Ruídos ambientais e obstáculos arquitetônicos são barreiras físicas."
-            },
-            {
-                id: "t3_q14",
-                text: "Como o Agente Administrativo deve proceder quando o cidadão solicita uma informação que o servidor NÃO sabe responder no momento?",
-                options: [
-                    "Inventar uma resposta plausível para não demonstrar dúvida.",
-                    "Informar com educação que não possui aquela informação de imediato, buscar o setor ou colega competente para averiguar e dar a orientação correta.",
-                    "Mandar o cidadão procurar no Google sem dar orientações adicionais.",
-                    "Dizer que a Prefeitura não atende àquele tipo de dúvida."
-                ],
-                correct: 1,
-                explanation: "Fundamentação: Ética e Atendimento. A honestidade intelectual aliada à proatividade garante orientação segura ao administrado."
-            },
-            {
-                id: "t3_q15",
-                text: "Na recepção de munícipes em repartição da Prefeitura de Itajaí, o que é fundamental para a boa gestão do fluxo de atendimento?",
-                options: [
-                    "Sistemas de triagem por senhas numeradas organizadas por prioridade legal e tipo de serviço.",
-                    "Atendimento por ordem de preferência pessoal do atendente.",
-                    "Agrupamento de todos os cidadãos em uma única fila sem distinção de prioridade.",
-                    "Permitir que apenas pessoas cadastradas previamente em sindicatos entrem."
-                ],
-                correct: 0,
-                explanation: "Fundamentação: Organização de Atendimento. Senhas categorizadas (geral e prioritária) otimizam a fila e respeitam as regras normativas."
-            },
-            {
-                id: "t3_q16",
-                text: "A habilidade interpessoal que consiste na capacidade de compreender os sentimentos e perspetiva da outra pessoa, colocando-se no lugar dela, chama-se:",
-                options: [
-                    "Antipatia.",
-                    "Empatia.",
-                    "Apatia.",
-                    "Sarcasmo."
-                ],
-                correct: 1,
-                explanation: "Fundamentação: Psicologia Organizacional e Atendimento. A empatia possibilita acolhimento e compreensão da dor do munícipe."
-            },
-            {
-                id: "t3_q17",
-                text: "Ao redigir uma mensagem eletrônica institucional direcionada a outro setor do Município de Itajaí, o tom da comunicação deve ser:",
-                options: [
-                    "Informal e com piadas para descontrair a rotina.",
-                    "Formal, claro, objetivo e respeitoso.",
-                    "Agressivo para cobrar prazos atrasados.",
-                    "Criptografado com palavras em código."
-                ],
-                correct: 1,
-                explanation: "Fundamentação: Redação Oficial e Comunicação Interna. A formalidade moderada e o respeito fundamentam os comunicados no setor público."
-            },
-            {
-                id: "t3_q18",
-                text: "O ruído na comunicação pode ser definido como:",
-                options: [
-                    "Qualquer elemento ou distúrbio que afete ou distorça a mensagem entre o emissor e o receptor.",
-                    "O canal de transmissão de alta velocidade de dados.",
-                    "A confirmação de leitura pelo receptor.",
-                    "A perfeita síntese do documento oficial."
-                ],
-                correct: 0,
-                explanation: "Fundamentação: Teoria Geral da Comunicação. Ruído é qualquer interferência que prejudica a correta assimilação do conteúdo."
-            },
-            {
-                id: "t3_q19",
-                text: "Assinale a alternativa que indica uma postura profissional ADEQUADA do atendente durante o serviço público presencial:",
-                options: [
-                    "Utilizar redes sociais pessoais no smartphone em frente ao cidadão enquanto este fala.",
-                    "Manter contato visual, postura ereta, linguagem acessível e atenção exclusiva durante o diálogo.",
-                    "Almoçar na bancada de atendimento na presença do munícipe.",
-                    "Expressar opiniões políticas partidárias depreciativas sobre a gestão."
-                ],
-                correct: 1,
-                explanation: "Fundamentação: Ética Profissional e Atendimento. A atenção direcionada demonstra respeito ao munícipe e profissionalismo."
-            },
-            {
-                id: "t3_q20",
-                text: "Em relação à Ouvidoria Municipal, qual é a sua principal função na estrutura do atendimento público?",
-                options: [
-                    "Aplicar sanções penais diretas aos munícipes inadimplentes.",
-                    "Atuar como canal de escuta do cidadão para receber elogios, sugestões, reclamações e denúncias, promovendo melhorias na gestão pública.",
-                    "Substituir o trabalho do Prefeito na assinatura de contratos de compras.",
-                    "Gerenciar as folhas de pagamento e salários dos servidores."
-                ],
-                correct: 1,
-                explanation: "Fundamentação: Participação e Controle Social (Lei 13.460/2017). A Ouvidoria acolhe as manifestações do cidadão para aprimorar os serviços."
-            }
-        ]
-    },
-    {
-        themeId: "t4",
-        themeName: "4. Apoio Administrativo e Logística",
-        questions: [
-            {
-                id: "t4_q1",
-                text: "No controle de almoxarifado de uma secretaria municipal, a técnica de gestão de estoque conhecida como PEPS (ou FIFO em inglês) estabelece que:",
-                options: [
-                    "O primeiro produto que entra no estoque deve ser o primeiro a sair.",
-                    "O último produto que entra no estoque é o primeiro a sair.",
-                    "Os produtos mais caros devem ser consumidos primeiro.",
-                    "Os produtos adquiridos por doação devem ter prioridade de descarte."
-                ],
-                correct: 0,
-                explanation: "Fundamentação: Logística de Suprimentos. PEPS (Primeiro que Entra, Primeiro que Sai) evita o vencimento de materiais e insumos armazenados há mais tempo."
-            },
-            {
-                id: "t4_q2",
-                text: "A relação detalhada e discriminada de todos os bens permanentes (móveis, computadores, veículos) pertencentes ao patrimônio do Município de Itajaí denomina-se:",
-                options: [
-                    "Balanço de Pagamentos.",
-                    "Inventário Patrimonial.",
-                    "Folha de Almoxarifado.",
-                    "Guia de Envio de Correios."
-                ],
-                correct: 1,
-                explanation: "Fundamentação: Gestão Patrimonial. O Inventário Patrimonial lista, identifica (plaquetas de tombamento) e avalia o acervo de bens da Administração."
-            },
-            {
-                id: "t4_q3",
-                text: "O conceito de 'Estoque de Segurança' (ou estoque mínimo) no almoxarifado público refere-se à quantidade de material mantida para:",
-                options: [
-                    "Acumular insumos desnecessários para o próximo exercício financeiro.",
-                    "Prevenir a paralisação das atividades administrativas por atrasos no fornecimento ou pico inesperado de consumo.",
-                    "Garantir a venda em leilão caso o preço de mercado suba.",
-                    "Substituir totalmente a necessidade de novas compras no ano."
-                ],
-                correct: 1,
-                explanation: "Fundamentação: Administração de Materiais. O estoque mínimo protege a organização contra imprevistos na cadeia de suprimentos."
-            },
-            {
-                id: "t4_q4",
-                text: "Qual dos itens a seguir é classificado como Material de CONSUMO no ambiente de escritório municipal?",
-                options: [
-                    "Mesa de escritório em madeira.",
-                    "Computador desktop institucional.",
-                    "Resma de papel sulfite A4 e canetas esferográficas.",
-                    "Aparelho de ar-condicionado."
-                ],
-                correct: 2,
-                explanation: "Fundamentação: Contabilidade e Gestão de Materiais. Materiais de consumo perdem suas características com o uso regular de curto prazo (papel, caneta, toner)."
-            },
-            {
-                id: "t4_q5",
-                text: "Bens que possuem durabilidade superior a 2 anos e que não perdem sua identidade física quando incorporados ao serviço municipal são classificados como:",
-                options: [
-                    "Materiais Perecíveis.",
-                    "Bens Permanentes.",
-                    "Insumos descartáveis.",
-                    "Serviços de terceiros."
-                ],
-                correct: 1,
-                explanation: "Fundamentação: Portaria STN / Gestão de Materiais. Bens permanentes têm vida útil prolongada e são tombados no patrimônio."
-            },
-            {
-                id: "t4_q6",
-                text: "Ao receber uma entrega de resmas de papel e toners de impressora enviada pelo fornecedor contratado pela Prefeitura, a primeira providência do Agente Administrativo é:",
-                options: [
-                    "Distribuir imediatamente os itens pelos setores sem conferência.",
-                    "Conferir a nota fiscal, a quantidade física e as especificações dos produtos com o pedido/empenho antes de atestar o recebimento.",
-                    "Guardar tudo no depósito sem abrir as caixas por 30 dias.",
-                    "Devolver o lote caso a caixa externa apresente pequenas poeiras."
-                ],
-                correct: 1,
-                explanation: "Fundamentação: Rotinas de Recebimento em Almoxarifado. A conferência físico-financeira (recebimento provisório) precede o ateste definitivo da nota fiscal."
-            },
-            {
-                id: "t4_q7",
-                text: "Na operação de equipamentos de reprografia (fotocopiadoras e impressoras), a conduta preventiva e sustentável recomendada para o servidor é:",
-                options: [
-                    "Imprimir todos os e-mails recebidos para guardar em pastas físicas.",
-                    "Utilizar a impressão frente e verso (duplex), preferir documentos digitais e reaproveitar papéis como rascunho quando adequado.",
-                    "Manter as impressoras ligadas e realizando impressões em branco para não secar a tinta.",
-                    "Descartar cartuchos vazios no lixo comum sem separação."
-                ],
-                correct: 1,
-                explanation: "Fundamentação: Sustentabilidade na Administração Pública. A redução do uso de papel e energia promove a economicidade e a responsabilidade ambiental."
-            },
-            {
-                id: "t4_q8",
-                text: "A identificação física fixada nos móveis e equipamentos da Prefeitura por meio de etiquetas com código de barras ou plaquetas metálicas é chamada de:",
-                options: [
-                    "Selo de Qualidade.",
-                    "Tombamento ou Plaqueta de Patrimônio.",
-                    "Marca registrada.",
-                    "Chancela de protocolo."
-                ],
-                correct: 1,
-                explanation: "Fundamentação: Gestão de Patrimônio Público. O tombamento associa o bem ao número de registro patrimonial oficial do município."
-            },
-            {
-                id: "t4_q9",
-                text: "Quando um equipamento de informática antigo do município perde sua utilidade funcional para a administração, porém ainda possui valor econômico de revenda, ele é classificado patrimonialmente como bem:",
-                options: [
-                    "Inservível e alienável (por leilão).",
-                    "Imprescritível e vitalício.",
-                    "De uso comum do povo.",
-                    "Consumível em 24 horas."
-                ],
-                correct: 0,
-                explanation: "Fundamentação: Legislação Patrimonial Pública. Bens inservíveis que não atendem mais ao órgão podem ser alienados conforme previsão legal."
-            },
-            {
-                id: "t4_q10",
-                text: "A Curva ABC (ou Análise de Pareto) aplicada à gestão de estoques do almoxarifado auxilia a identificar:",
-                options: [
-                    "Apenas os produtos que estão com prazo de validade vencido.",
-                    "Os itens em estoque organizados pela sua importância financeira e volume de recursos investidos (Classe A: alta representatividade financeira).",
-                    "A ordem alfabética exata de todos os fornecedores cadastrados no município.",
-                    "A lista de funcionários autorizados a retirar materiais de limpeza."
-                ],
-                correct: 1,
-                explanation: "Fundamentação: Administração de Materiais. A Curva ABC categoriza os estoques em A (maior valor), B (valor intermediário) e C (menor valor relativo)."
-            },
-            {
-                id: "t4_q11",
-                text: "No apoio logístico a eventos institucionais promovidos pela Prefeitura de Itajaí, cabe ao apoio administrativo:",
-                options: [
-                    "Decidir sozinho o orçamento anual de investimento em infraestrutura municipal.",
-                    "Organizar listas de presença, checar o funcionamento de equipamentos audiovisuais, reservar salas e providenciar materiais de apoio.",
-                    "Contratar fornecedores sem licitação prévia.",
-                    "Substituir os palestrantes oficiais durante as apresentações."
-                ],
-                correct: 1,
-                explanation: "Fundamentação: Atribuições do Cargo / Suporte Operacional. O suporte de infraestrutura e recursos garante o sucesso dos eventos públicos."
-            },
-            {
-                id: "t4_q12",
-                text: "Em caso de extravio ou avaria injustificada de uma máquina fotográfica pertencente ao patrimônio municipal sob responsabilidade do servidor, qual é o procedimento legal?",
-                options: [
-                    "Ignorar o fato e solicitar a compra de uma máquina nova no dia seguinte.",
-                    "Instaurar sindicância ou processo administrativo para apurar as responsabilidades e o ressarcimento do dano ao erário.",
-                    "Descontar do salário de todos os servidores da repartição partes iguais.",
-                    "Vender os restos da máquina em leilão informal."
-                ],
-                correct: 1,
-                explanation: "Fundamentação: LC 2.960/1995 e Responsabilidade Patrimonial. Danos ao patrimônio público exigem apuração formal e ressarcimento do responsável."
-            },
-            {
-                id: "t4_q13",
-                text: "A rotina de 'Inventário Físico' do almoxarifado consiste em:",
-                options: [
-                    "Contar fisicamente todos os materiais armazenados nas prateleiras e comparar com as quantidades registradas nos sistemas de controle.",
-                    "Comprar novos materiais sempre que o valor do saldo bancário aumentar.",
-                    "Vender caixas de papel para reciclagem sem autorização.",
-                    "Digitalizar todas as notas fiscais recebidas há mais de 10 anos."
-                ],
-                correct: 0,
-                explanation: "Fundamentação: Controle de Estoque. O inventário físico apura discrepâncias e garante a acurácia dos dados de estoque."
-            },
-            {
-                id: "t4_q14",
-                text: "O documento interno emitido por um setor municipal solicitando ao almoxarifado o fornecimento de determinados materiais de escritório chama-se:",
-                options: [
-                    "Nota Fiscal Eletrônica.",
-                    "Requisição de Material.",
-                    "Ordem de Pagamento.",
-                    "Edital de Concorrência."
-                ],
-                correct: 1,
-                explanation: "Fundamentação: Rotinas de Almoxarifado. A Requisição de Material autoriza a baixa e entrega de insumos ao setor solicitante."
-            },
-            {
-                id: "t4_q15",
-                text: "A conservação correta de equipamentos eletrônicos (computadores, estabilizadores, no-breaks) na repartição exige:",
-                options: [
-                    "Manter os aparelhos em locais secos, ventilados e livres de poeira e luz solar direta.",
-                    "Lavar o teclado com água corrente ao final da semana.",
-                    "Ligar múltiplos equipamentos de alta potência em um mesmo benjamim/te de tomada frágil.",
-                    "Desligar abruptamente os computadores puxando a tomada diariamente."
-                ],
-                correct: 0,
-                explanation: "Fundamentação: Conservação de Bens Públicos. Cuidados operacionais evitam sobrecargas e avarias no patrimônio tecnológico."
-            },
-            {
-                id: "t4_q16",
-                text: "O tempo decorrido entre a emissão do pedido de compra de material pela Prefeitura e a efetiva entrega do produto no almoxarifado pelo fornecedor é conhecido na logística como:",
-                options: [
-                    "Giro de estoque.",
-                    "Tempo de Ressuprimento (ou Lead Time).",
-                    "Ponto de fulgor.",
-                    "Taxa de depreciação linear."
-                ],
-                correct: 1,
-                explanation: "Fundamentação: Logística e Suprimentos. O Lead Time deve ser considerado no cálculo do ponto de pedido para evitar desabastecimento."
-            },
-            {
-                id: "t4_q17",
-                text: "Para o correto armazenamento de materiais no depósito do almoxarifado, deve-se evitar:",
-                options: [
-                    "Dispor caixas pesadas nas prateleiras inferiores.",
-                    "Colocar materiais diretamente no chão sem paletes e encostados em paredes úmidas.",
-                    "Manter corredores livres e desimpedidos.",
-                    "Identificar as prateleiras com etiquetas de sinalização."
-                ],
-                correct: 1,
-                explanation: "Fundamentação: Armazenagem. O contato direto com chão ou paredes úmidas avaria os materiais e compromete a segurança."
-            },
-            {
-                id: "t4_q18",
-                text: "Ao realizar o inventário patrimonial, descobre-se que um armário de aço sofreu perda paulatina de valor devido ao desgaste natural pelo uso ao longo dos anos. Este fenômeno contábil denomina-se:",
-                options: [
-                    "Amortização antecipada.",
-                    "Depreciação.",
-                    "Valorização cambial.",
-                    "Alienação compulsória."
-                ],
-                correct: 1,
-                explanation: "Fundamentação: Contabilidade Patrimonial. A depreciação registra a perda de valor do bem tangível decorrente de desgaste, ação do tempo ou obsolescência."
-            },
-            {
-                id: "t4_q19",
-                text: "O setor responsável pela guarda, organização, controle e distribuição dos materiais de consumo de uma instituição pública é o:",
-                options: [
-                    "Almoxarifado.",
-                    "Arquivo Histórico.",
-                    "Gabinete do Prefeito.",
-                    "Setor de Licitações."
-                ],
-                correct: 0,
-                explanation: "Fundamentação: Estrutura Organizacional e Logística. O almoxarifado responde pela gestão física dos materiais de consumo."
-            },
-            {
-                id: "t4_q20",
-                text: "Qual a finalidade de se manter atualizado o cadastro de fornecedores no sistema de compras públicas?",
-                options: [
-                    "Permitir o direcionamento de compras para empresas preferidas sem licitação.",
-                    "Agilizar convocações, verificar a regularidade fiscal e jurídica das empresas e garantir transparência nas compras.",
-                    "Isentar fornecedores do pagamento de tributos municipais.",
-                    "Limitar a participação apenas a empresas sediadas no centro da cidade."
-                ],
-                correct: 1,
-                explanation: "Fundamentação: Compras Públicas e Licitações. O cadastro mantido atualizado assegura segurança jurídica e celeridade aos certames."
-            }
-        ]
-    },
-    {
-        themeId: "t5",
-        themeName: "5. Informática Básica Aplicada",
-        questions: [
-            {
-                id: "t5_q1",
-                text: "No sistema operacional Microsoft Windows (versões recentes), qual atalho de teclado é amplamente utilizado no Explorador de Arquivos para CRIAR UMA NOVA PASTA rapidamente?",
-                options: [
-                    "Ctrl + Shift + N",
-                    "Ctrl + Alt + Del",
-                    "Ctrl + P",
-                    "Alt + F4"
-                ],
-                correct: 0,
-                explanation: "Fundamentação: Atagios Padrão do Windows. Ctrl + Shift + N cria instantaneamente uma nova pasta no Explorador de Arquivos."
-            },
-            {
-                id: "t5_q2",
-                text: "Em um editor de textos como o Microsoft Word ou Writer, o procedimento utilizado para alinhar uniformemente as margens esquerda e direita de um parágrafo é:",
-                options: [
-                    "Alinhar à Esquerda.",
-                    "Centralizar.",
-                    "Justificar.",
-                    "Alinhar à Direita."
-                ],
-                correct: 2,
-                explanation: "Fundamentação: Editores de Texto. O alinhamento 'Justificado' distribui o texto entre as margens esquerda e direita."
-            },
-            {
-                id: "t5_q3",
-                text: "No Microsoft Excel ou LibreOffice Calc, qual é a fórmula correta para SOMAR os valores contidos no intervalo de células da célula A1 até a célula A10?",
-                options: [
-                    "=SOMA(A1:A10)",
-                    "=SOMA(A1;A10)",
-                    "=SOMAR(A1..A10)",
-                    "=ADICIONAR(A1-A10)"
-                ],
-                correct: 0,
-                explanation: "Fundamentação: Planilhas Eletrônicas. O operador de dois pontos (:) indica intervalo contínuo (de... até). O ponto e vírgula (;) separa elementos individuais."
-            },
-            {
-                id: "t5_q4",
-                text: "Ao enviar um e-mail institucional na Prefeitura, deseja-se incluir um destinatário que receberá uma cópia da mensagem sem que os demais destinatários saibam disso. Qual campo deve ser utilizado?",
-                options: [
-                    "Para (To)",
-                    "Cc (Com Cópia)",
-                    "Cco (Com Cópia Oculta / Bcc)",
-                    "Assunto (Subject)"
-                ],
-                correct: 2,
-                explanation: "Fundamentação: Correios Eletrônicos (E-mail). O campo Cco (Cópia Oculta) oculta o endereço do destinatário dos demais receptores."
-            },
-            {
-                id: "t5_q5",
-                text: "Assinale a opção que indica o protocolo de navegação na internet que garante a criptografia e segurança no tráfego de dados entre o navegador do usuário e o site acessado (ex: Portal da Transparência):",
-                options: [
-                    "HTTP",
-                    "HTTPS",
-                    "FTP",
-                    "SMTP"
-                ],
-                correct: 1,
-                explanation: "Fundamentação: Redes e Segurança. O HTTPS (HyperText Transfer Protocol Secure) utiliza criptografia (SSL/TLS) para proteger os dados trafegados."
-            },
-            {
-                id: "t5_q6",
-                text: "No Windows, quando um arquivo armazenado no disco rígido principal (C:) é selecionado e o usuário pressiona a combinação de teclas 'Shift + Delete', o arquivo será:",
-                options: [
-                    "Enviado para a Lixeira do sistema.",
-                    "Excluído permanentemente, sem passar pela Lixeira.",
-                    "Copiado para a área de transferência.",
-                    "Compactado em formato ZIP."
-                ],
-                correct: 1,
-                explanation: "Fundamentação: Atalhos e Operações do Windows. Shift + Delete ignora a Lixeira e solicita a exclusão definitiva do arquivo."
-            },
-            {
-                id: "t5_q7",
-                text: "Qual das seguintes extensões de arquivo corresponde a um documento em formato PDF amplamente utilizado no setor público pela sua portabilidade?",
-                options: [
-                    ".exe",
-                    ".pdf",
-                    ".xlsx",
-                    ".mp3"
-                ],
-                correct: 1,
-                explanation: "Fundamentação: Formatos de Arquivo. .pdf (Portable Document Format) é o padrão para troca de documentos estáticos legíveis."
-            },
-            {
-                id: "t5_q8",
-                text: "Em um navegador de internet (Google Chrome ou Mozilla Firefox), a combinação de teclas utilitária para abrir a página de downloads efetuados é:",
-                options: [
-                    "Ctrl + J",
-                    "Ctrl + H",
-                    "Ctrl + N",
-                    "Ctrl + T"
-                ],
-                correct: 0,
-                explanation: "Fundamentação: Navegadores Web. Ctrl + J exibe os Downloads efetuados. Ctrl + H abre o Histórico de navegação."
-            },
-            {
-                id: "t5_q9",
-                text: "Qual é a função da ferramenta 'Pincel de Formatação' disponível nas suítes de escritório (Word/Excel/Writer/Calc)?",
-                options: [
-                    "Desenhar figuras geométricas coloridas no texto.",
-                    "Copiar a formatação (fonte, tamanho, cor) de um trecho selecionado e aplicá-la em outro.",
-                    "Verificar e corrigir erros gramaticais do texto.",
-                    "Converter o documento em formato de imagem JPEG."
-                ],
-                correct: 1,
-                explanation: "Fundamentação: Editores de Texto e Planilhas. O Pincel reproduz o estilo visual/formatação de um elemento para outro."
-            },
-            {
-                id: "t5_q10",
-                text: "No Excel/Calc, a fórmula '=MÉDIA(B2:B6)' tem por objetivo:",
-                options: [
-                    "Retornar o maior valor existente entre as células B2 e B6.",
-                    "Calcular a média aritmética simples dos valores contidos na sequência de células de B2 até B6.",
-                    "Somar o valor de B2 com B6 e dividir por 10.",
-                    "Contar quantas células no intervalo possuem letras."
-                ],
-                correct: 1,
-                explanation: "Fundamentação: Funções de Planilha. MÉDIA calcula a soma dos valores no intervalo dividida pela quantidade de células com valores numéricos."
-            },
-            {
-                id: "t5_q11",
-                text: "Qual tipo de ameaça virtual (malware) caracteriza-se por criptografar os arquivos da vítima e exigir o pagamento de um resgate (geralmente em criptomoedas) para liberar o acesso?",
-                options: [
-                    "Adware",
-                    "Ransomware",
-                    "Spyware",
-                    "Keylogger"
-                ],
-                correct: 1,
-                explanation: "Fundamentação: Segurança da Informação. Ransomware extorque a vítima sequestrando dados via criptografia."
-            },
-            {
-                id: "t5_q12",
-                text: "Para salvar um arquivo em edição no Word com um novo nome ou em uma pasta diferente, a opção do menu 'Arquivo' correta a ser selecionada é:",
-                options: [
-                    "Salvar",
-                    "Salvar Como",
-                    "Exportar para Impressora",
-                    "Compartilhar Link"
-                ],
-                correct: 1,
-                explanation: "Fundamentação: Edição de Documentos. 'Salvar Como' permite alterar o nome, o diretório de destino e o formato do arquivo."
-            },
-            {
-                id: "t5_q13",
-                text: "O protocolo de e-mail responsável pelo ENVIAR/TRANSMISSÃO de mensagens na internet é o:",
-                options: [
-                    "POP3",
-                    "IMAP",
-                    "SMTP",
-                    "DNS"
-                ],
-                correct: 2,
-                explanation: "Fundamentação: Serviços de Correio Eletrônico. SMTP (Simple Mail Transfer Protocol) é o protocolo padrão para envio de e-mails."
-            },
-            {
-                id: "t5_q14",
-                text: "O que é o serviço de Armazenamento em Nuvem (Cloud Storage)?",
-                options: [
-                    "Um programa para medir a temperatura dos processadores de computador.",
-                    "Serviço que permite guardar, acessar e sincronizar arquivos via internet em servidores remotos.",
-                    "Uma placa física conectada na porta USB do computador.",
-                    "Um antivírus que limpa arquivos temporários do disco."
-                ],
-                correct: 1,
-                explanation: "Fundamentação: Computação em Nuvem. Permite o armazenamento descentralizado e acesso remoto a dados via internet."
-            },
-            {
-                id: "t5_q15",
-                text: "No Excel/Calc, se a célula C1 contém a fórmula '=$A$1+B1' e for copiada e colada para a célula C2, a fórmula resultante em C2 será:",
-                options: [
-                    "=$A$2+B2",
-                    "=$A$1+B2",
-                    "=$A$1+B1",
-                    "=A1+B2"
-                ],
-                correct: 1,
-                explanation: "Fundamentação: Referências Absolutas e Relativas no Excel. O símbolo $ trava a referência (absoluta). $A$1 não se altera, enquanto B1 varia para B2."
-            },
-            {
-                id: "t5_q16",
-                text: "Assinale o atalho universal de teclado utilizado no Windows para LOCALIZAR uma palavra dentro de um documento ou página web:",
-                options: [
-                    "Ctrl + F (ou Ctrl + L no Word em português)",
-                    "Ctrl + Z",
-                    "Ctrl + V",
-                    "Ctrl + X"
-                ],
-                correct: 0,
-                explanation: "Fundamentação: Atalhos de Sistema. Ctrl + F (Find) ou Ctrl + L (Localizar) abre a barra de busca de texto."
-            },
-            {
-                id: "t5_q17",
-                text: "Qual dos seguintes componentes do computador é classificado como HARDWARE de Armazenamento Não-Volátil (mantém os dados salvos mesmo após desligar)?",
-                options: [
-                    "Memória RAM",
-                    "SSD / Disco Rígido (HD)",
-                    "Processador (CPU)",
-                    "Placa Mãe"
-                ],
-                correct: 1,
-                explanation: "Fundamentação: Conceitos de Hardware. SSD e HD são memórias secundárias permanentes (não-voláteis). A memória RAM é volátil."
-            },
-            {
-                id: "t5_q18",
-                text: "Ao utilizar o mecanismo de busca do Google para pesquisar uma expressão exata (sem variação de termos), qual recurso deve ser aplicado?",
-                options: [
-                    "Digitar a palavra em letras maiúsculas.",
-                    "Colocar a expressão entre aspas duplas (ex: "Prefeitura de Itajaí").",
-                    "Adicionar um ponto de interrogação no final.",
-                    "Usar asterisco entre cada letra."
-                ],
-                correct: 1,
-                explanation: "Fundamentação: Buscas na Web. Aspas duplas forçam o mecanismo a buscar a correspondência exata das palavras na ordem escrita."
-            },
-            {
-                id: "t5_q19",
-                text: "A cópia de segurança de arquivos e dados armazenada em local isolado para recuperação em caso de falha de sistema denomina-se:",
-                options: [
-                    "Upload",
-                    "Backup",
-                    "Download",
-                    "Firewall"
-                ],
-                correct: 1,
-                explanation: "Fundamentação: Segurança e Gestão de Dados. O Backup garante a salvaguarda e disponibilidade das informações contra perdas."
-            },
-            {
-                id: "t5_q20",
-                text: "O recurso de segurança que atua como uma barreira filtrando o tráfego de dados autorizados e bloqueando conexões não autorizadas na rede de computadores do município é o:",
-                options: [
-                    "Firewall",
-                    "Driver de vídeo",
-                    "Defragmentador de disco",
-                    "Plugin de áudio"
-                ],
-                correct: 0,
-                explanation: "Fundamentação: Segurança de Redes. O Firewall monitora as portas e conexões bloqueando tráfego malicioso."
-            }
-        ]
-    },
-    {
-        themeId: "t6",
-        themeName: "6. Ética, Legislação e Transparência",
-        questions: [
-            {
-                id: "t6_q1",
-                text: "De acordo com a Lei de Acesso à Informação (Lei nº 12.527/2011 - LAI), o acesso às informações públicas é a regra, e o sigilo é a exceção. Como se classifica a transparência exercida quando a Administração divulga dados espontaneamente na internet sem necessidade de pedido prévio?",
-                options: [
-                    "Transparência Passiva.",
-                    "Transparência Ativa.",
-                    "Transparência Clandestina.",
-                    "Transparência Judiciária."
-                ],
-                correct: 1,
-                explanation: "Fundamentação: Lei 12.527/2011 (LAI). Transparência Ativa é a divulgação de informações de interesse público por iniciativa própria do órgão. Transparência Passiva atende a pedidos do cidadão."
-            },
-            {
-                id: "t6_q2",
-                text: "Nos termos da Lei nº 12.527/2011 (LAI), recebi do munícipe um pedido formal de acesso à informação. Se a informação estiver disponível, o acesso deve ser concedido de imediato. Caso não seja possível o acesso imediato, qual é o prazo legal MÁXIMO para resposta ao cidadão?",
-                options: [
-                    "5 (cinco) dias, vedada qualquer prorrogação.",
-                    "20 (vinte) dias, prorrogáveis por mais 10 (dez) dias mediante justificativa expressa.",
-                    "60 (sessenta) dias corridos.",
-                    "120 (cento e vinte) dias."
-                ],
-                correct: 1,
-                explanation: "Fundamentação: Art. 11, § 1º da Lei 12.527/2011. O prazo inicial é de até 20 dias, podendo ser prorrogado por mais 10 dias com justificativa."
-            },
-            {
-                id: "t6_q3",
-                text: "A respeito dos deveres éticos do servidor público municipal, assinale a alternativa INCORRETA:",
-                options: [
-                    "Tratar os usuários do serviço público com cortesia e urbanidade.",
-                    "Desempenhar as atribuições do cargo com presteza e assiduidade.",
-                    "Usar o cargo público ou facilidades do setor para obter vantagens indevidas para si ou terceiros.",
-                    "Guardar sigilo sobre assuntos da repartição que tenham caráter confidencial nos termos da lei."
-                ],
-                correct: 2,
-                explanation: "Fundamentação: Código de Ética e LC 2.960/95. Obter vantagem indevida vale violação grave aos deveres éticos e improbidade administrativa."
-            },
-            {
-                id: "t6_q4",
-                text: "A Lei de Improbidade Administrativa (Lei nº 8.429/1992 com alterações da Lei 14.230/2021) pune os atos ilícitos praticados por agentes públicos. Para a configuração de atos de improbidade administrativa, exige-se atualmente a comprovação de:",
-                options: [
-                    "Mera culpa grave ou negligência simples.",
-                    "Dolo (vontade livre e consciente de alcançar o resultado ilícito).",
-                    "Apenas dano moral presumido sem conduta ativa.",
-                    "Incompetência técnica sem má-fé."
-                ],
-                correct: 1,
-                explanation: "Fundamentação: Lei 8.429/92 alterada pela Lei 14.230/2021. Exige-se a demonstração do DOLO para a tipificação dos atos de improbidade."
-            },
-            {
-                id: "t6_q5",
-                text: "Informações pessoais relativas à intimidade, vida privada, honra e imagem das pessoas contidas em documentos públicos possuem acesso restrito por qual prazo máximo, nos termos da LAI (Lei 12.527/2011)?",
-                options: [
-                    "Até 5 anos.",
-                    "Até 25 anos.",
-                    "Até 100 anos, a contar da data de sua produção.",
-                    "Não possuem restrição, sendo totalmente públicas imediatamente."
-                ],
-                correct: 2,
-                explanation: "Fundamentação: Art. 31, § 1º, I da Lei 12.527/2011. Informações pessoais relativas à intimidade e honra têm acesso restrito pelo prazo máximo de 100 anos."
-            },
-            {
-                id: "t6_q6",
-                text: "Conforme a LAI, a informação pública considerada ultrassecreta pode ter seu acesso restringido pelo prazo máximo de:",
-                options: [
-                    "5 anos.",
-                    "15 anos.",
-                    "25 anos.",
-                    "50 anos."
-                ],
-                correct: 2,
-                explanation: "Fundamentação: Art. 24, § 1º da Lei 12.527/2011. Prazos de segredo: Reservada (5 anos), Secreta (15 anos) e Ultrassecreta (25 anos)."
-            },
-            {
-                id: "t6_q7",
-                text: "A Lei Geral de Proteção de Dados Pessoais (LGPD - Lei nº 13.709/2018) aplica-se ao tratamento de dados efetuado pela Prefeitura de Itajaí. O objetivo principal da LGPD é:",
-                options: [
-                    "Impedir a fiscalização dos órgãos de controle sobre os gastos municipais.",
-                    "Proteger os direitos fundamentais de liberdade e de privacidade e o livre desenvolvimento da pessoa natural.",
-                    "Tornar todos os dados cadastrais dos moradores de Itajaí abertos para venda no mercado privado.",
-                    "Obrigar a digitalização de todos os livros físicos em 30 dias."
-                ],
-                correct: 1,
-                explanation: "Fundamentação: Art. 1º da Lei 13.709/2018 (LGPD). Visa proteger a privacidade e os dados pessoais do cidadão."
-            },
-            {
-                id: "t6_q8",
-                text: "O servidor que revela fato ou informação de que tem ciência em razão do cargo e que deva permanecer em segredo incorre em violação ao dever de:",
-                options: [
-                    "Eficiência material.",
-                    "Sigilo Funcional.",
-                    "Hierarquia flexível.",
-                    "Assiduidade relativa."
-                ],
-                correct: 1,
-                explanation: "Fundamentação: LC 2.960/1995 e Código Penal. Guardar sigilo sobre assuntos da repartição é dever funcional expressamente tipificado."
-            },
-            {
-                id: "t6_q9",
-                text: "Nos termos da Lei nº 12.527/2011, é direito do cidadão obter acesso a informações relativas a, EXCETO:",
-                options: [
-                    "Atividades desenvolvidas pelos órgãos públicos municipais.",
-                    "Uso e destinação dos recursos públicos.",
-                    "Projetos de pesquisa e desenvolvimento científico cujo sigilo seja imprescindível à segurança da sociedade e do Estado.",
-                    "Implementação e acompanhamento de políticas públicas."
-                ],
-                correct: 2,
-                explanation: "Fundamentação: Art. 23 da Lei 12.527/2011. Projetos cuja divulgação coloque em risco a segurança da sociedade/Estado constituem exceção legal ao acesso imediato."
-            },
-            {
-                id: "t6_q10",
-                text: "A conduta ética do Agente Administrativo no exercício de suas funções deve ser pautada pela primazia do:",
-                options: [
-                    "Interesse particular e corporativo dos servidores do setor.",
-                    "Interesse público e bem comum da coletividade.",
-                    "Lucro financeiro das empresas contratadas.",
-                    "Conforto pessoal e comodidade da chefia."
-                ],
-                correct: 1,
-                explanation: "Fundamentação: Princípio da Supremacia do Interesse Público sobre o Privado e Ética no Serviço Público."
-            },
-            {
-                id: "t6_q11",
-                text: "Quando o cidadão solicita acesso a um documento através da LAI e o pedido é INDEFERIDO pelo órgão, a decisão de indeferimento deve obrigatoriamente:",
-                options: [
-                    "Ser verbal e sem necessidade de explicar os motivos.",
-                    "Conter a indicação das razões de fato e de direito e a informação sobre a possibilidade de interposição de recurso.",
-                    "Acompanhar cobrança de taxa de indenização pelo atendimento.",
-                    "Ser enviada exclusivamente via publicação no jornal impresso regional."
-                ],
-                correct: 1,
-                explanation: "Fundamentação: Art. 11, § 4º da LAI. A negativa de acesso exige fundamentação expressa e indicação dos prazos e instâncias recursais."
-            },
-            {
-                id: "t6_q12",
-                text: "Qual serviço público municipal é responsável por divulgar e manter atualizadas na internet as contas públicas, receitas, despesas, licitações e contratos em cumprimento à Lei de Responsabilidade Fiscal e à LAI?",
-                options: [
-                    "Portal da Transparência.",
-                    "Jornal de Bairro.",
-                    "Rede social privada do Chefe de Gabinete.",
-                    "Quadro de avisos do sindicato."
-                ],
-                correct: 0,
-                explanation: "Fundamentação: Lei de Responsabilidade Fiscal (LC 101/2000) e LAI. O Portal da Transparência viabiliza a transparência ativa."
-            },
-            {
-                id: "t6_q13",
-                text: "O servidor público de Itajaí que presencia uma irregularidade no serviço público tem o dever funcional de:",
-                options: [
-                    "Omitir-se para evitar divergências com seus colegas.",
-                    "Levar a irregularidade ao conhecimento da autoridade superior ou do órgão de controle competente.",
-                    "Divulgar em fóruns anônimos de internet antes de informar a Prefeitura.",
-                    "Cobrar valores financeiros para manter o segredo."
-                ],
-                correct: 1,
-                explanation: "Fundamentação: LC 2.960/1995. Representar contra ilegalidade ou omissão e comunicar irregularidades são deveres do servidor."
-            },
-            {
-                id: "t6_q14",
-                text: "A respeito dos prazos de resposta previstos na Lei de Acesso à Informação (LAI), caso o serviço não seja gratuito por demandar fotocópias, o cidadão:",
-                options: [
-                    "Deverá pagar valor abusivo fixado pelo atendente.",
-                    "Estará isento de ressarcir os custos de reprodução gráfica caso declare não possuir situação econômica satisfatória.",
-                    "Perderá o direito de obter a informação.",
-                    "Deverá obrigatoriamente comprar uma impressora para o setor público."
-                ],
-                correct: 1,
-                explanation: "Fundamentação: Art. 12 da Lei 12.527/2011. A busca e fornecimento de informação são gratuitos, salvo custo de reprodução, do qual é isento quem declarar insuficiência econômica."
-            },
-            {
-                id: "t6_q15",
-                text: "No contexto da LGPD, o titular dos dados pessoais é:",
-                options: [
-                    "A Prefeitura Municipal de Itajaí.",
-                    "A pessoa natural a quem se referem os dados pessoais que são objeto de tratamento.",
-                    "O desenvolvedor de software que criou o sistema do município.",
-                    "O fiscal do Estado de Santa Catarina."
-                ],
-                correct: 1,
-                explanation: "Fundamentação: Art. 5º, V da Lei 13.709/2018. Titular é a pessoa natural proprietária dos dados pessoais."
-            },
-            {
-                id: "t6_q16",
-                text: "Assinale a conduta que configura Nepotismo, vedada no âmbito da Administração Pública nos termos da Súmula Vinculante nº 13 do STF:",
-                options: [
-                    "Aprovação de dois irmãos em concurso público de provas para provimento de cargos efetivos distintos.",
-                    "A nomeação de cônjuge, companheiro ou parente em linha reta, colateral ou por afinidade, até o terceiro grau, da autoridade nomeante para cargo em comissão.",
-                    "Contratação de empresa terceirizada mediante licitação pública pelo critério de menor preço.",
-                    "Designação de servidor de carreira estável para função gratificada em setor diverso ao de seu parente."
-                ],
-                correct: 1,
-                explanation: "Fundamentação: Súmula Vinculante 13 do STF. A nomeação de parentes até 3º grau para cargos comissionados viola a Constituição."
-            },
-            {
-                id: "t6_q17",
-                text: "A impessoalidade e a moralidade administrativa exigem que o Agente Administrativo declare suspeição ou impedimento ao atuar em processo administrativo no qual:",
-                options: [
-                    "O requerente seja pessoa de seu circulo de amizade íntima ou seu parente.",
-                    "O tema do processo seja sobre informática básica.",
-                    "O processo tenha mais de 100 páginas.",
-                    "A solicitação seja feita em dia de chuva em Itajaí."
-                ],
-                correct: 0,
-                explanation: "Fundamentação: Lei de Processo Administrativo (Lei 9.784/99) e Princípios Gerais. Impedimento e suspeição garantem imparcialidade às decisões."
-            },
-            {
-                id: "t6_q18",
-                text: "Conforme a LAI, a negação injustificada de prestação de informação pública sujeita o agente responsável a:",
-                options: [
-                    "Elogio em ficha funcional.",
-                    "Procedimento disciplinar para apuração de responsabilidade por infração administrativa.",
-                    "Transferência para cargo de chefia.",
-                    "Isenção de qualquer apuração legal."
-                ],
-                correct: 1,
-                explanation: "Fundamentação: Art. 32 da Lei 12.527/2011. Recusar-se a fornecer informação requerida nos termos da LAI constitui conduta ilícita passível de sanção disciplinar."
-            },
-            {
-                id: "t6_q19",
-                text: "A transparência PASSIVA no serviço público caracteriza-se quando:",
-                options: [
-                    "A Prefeitura disponibiliza permanentemente o orçamento na internet.",
-                    "O órgão público responde a uma solicitação específica de informação apresentada por um cidadão através do e-SIC / Fale Conosco.",
-                    "O Prefeito faz pronunciamento em rádio local.",
-                    "O Diário Oficial é impresso e colocado na praça da cidade."
-                ],
-                correct: 1,
-                explanation: "Fundamentação: Conceitos da LAI. Transparência passiva é o atendimento à demanda solicitada formalmente pelo administrado."
-            },
-            {
-                id: "t6_q20",
-                text: "O valor da honestidade, probidade e retidão que deve guiar a conduta de todos os servidores públicos municipais de Itajaí decorre diretamente do princípio da:",
-                options: [
-                    "Moralidade Administrativa.",
-                    "Publicidade restrita.",
-                    "Informalidade pura.",
-                    "Ampla competição comercial."
-                ],
-                correct: 0,
-                explanation: "Fundamentação: Art. 37, caput, da CF/88. A moralidade exige que a atuação do servidor seja ética, honesta e pautada na boa-fé."
+                explanation: "Fundamentação: Arquivologia. No método geográfico por cidade/estado, organiza-se primariamente pelo Estado (UF), depois pela Cidade e, dentro desta, pelo nome do correspondente."
             }
         ]
     }
 ];
 
-// Application State
-let currentThemeId = "t1";
-let userAnswers = {}; // key: questionId, value: selectedIndex
-
-// Shuffle helper function (Fisher-Yates)
-function shuffleArray(array) {
-    let shuffled = [...array];
-    for (let i = shuffled.length - 1; i > 0; i--) {
-        const j = Math.floor(Math.random() * (i + 1));
-        [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
-    }
-    return shuffled;
-}
-
-// Active shuffled set for current session
-let activeThemeQuestions = {};
+let currentThemeId = quizData[0].themeId;
+let userAnswers = {};
 
 function initApp() {
-    renderThemeButtons();
-    loadTheme(quizData[0].themeId);
+    renderThemeSelector();
+    loadTheme(currentThemeId);
 }
 
-function renderThemeButtons() {
-    const nav = document.getElementById('themeSelector');
-    nav.innerHTML = '';
+function renderThemeSelector() {
+    const container = document.getElementById('themeSelector');
+    container.innerHTML = '';
+    
     quizData.forEach(theme => {
         const btn = document.createElement('button');
         btn.className = `theme-btn ${theme.themeId === currentThemeId ? 'active' : ''}`;
-        btn.textContent = theme.themeName;
-        btn.onclick = () => loadTheme(theme.themeId);
-        nav.appendChild(btn);
+        btn.innerText = theme.themeName;
+        btn.onclick = () => {
+            currentThemeId = theme.themeId;
+            renderThemeSelector();
+            loadTheme(currentThemeId);
+        };
+        container.appendChild(btn);
     });
 }
 
 function loadTheme(themeId) {
-    currentThemeId = themeId;
-    renderThemeButtons();
-    
-    // Find theme data
-    const themeObj = quizData.find(t => t.themeId === themeId);
-    
-    // Shuffle questions AND shuffle options within each question for true randomness
-    if (!activeThemeQuestions[themeId]) {
-        let questionsCopy = JSON.parse(JSON.stringify(themeObj.questions));
-        
-        // Shuffle questions
-        questionsCopy = shuffleArray(questionsCopy);
-        
-        // Shuffle options per question while keeping correct answer pointer valid
-        questionsCopy.forEach(q => {
-            let optionsWithIndex = q.options.map((opt, idx) => ({ text: opt, originalIndex: idx }));
-            let shuffledOpts = shuffleArray(optionsWithIndex);
-            
-            q.options = shuffledOpts.map(o => o.text);
-            q.correct = shuffledOpts.findIndex(o => o.originalIndex === q.correct);
-        });
-        
-        activeThemeQuestions[themeId] = questionsCopy;
-    }
+    const theme = quizData.find(t => t.themeId === themeId);
+    if (!theme) return;
 
-    renderQuestions();
-    updateDashboard();
-}
-
-function resetCurrentTheme() {
-    delete activeThemeQuestions[currentThemeId];
-    // Clear user answers for this theme
-    const currentQuestions = quizData.find(t => t.themeId === currentThemeId).questions;
-    currentQuestions.forEach(q => {
-        delete userAnswers[q.id];
-    });
-    loadTheme(currentThemeId);
-}
-
-function renderQuestions() {
     const container = document.getElementById('quizContainer');
     container.innerHTML = '';
-    
-    const questions = activeThemeQuestions[currentThemeId];
-    const letters = ['A', 'B', 'C', 'D'];
 
-    questions.forEach((q, index) => {
+    theme.questions.forEach((q, index) => {
         const card = document.createElement('div');
         card.className = 'question-card';
         card.id = `card_${q.id}`;
 
-        const isAnswered = userAnswers.hasOwnProperty(q.id);
-        const selectedOpt = isAnswered ? userAnswers[q.id] : null;
-
+        const letters = ['A', 'B', 'C', 'D'];
+        
         let optionsHtml = q.options.map((opt, optIdx) => {
-            let optionClass = 'option-item';
-            if (isAnswered) {
-                optionClass += ' disabled';
-                if (optIdx === q.correct) {
-                    optionClass += ' correct';
-                } else if (optIdx === selectedOpt) {
-                    optionClass += ' incorrect';
-                }
-            }
-
             return `
-                <li class="${optionClass}" onclick="handleOptionClick('${q.id}', ${optIdx})">
+                <li class="option-item" id="opt_${q.id}_${optIdx}" onclick="selectOption('${q.id}', ${optIdx}, ${q.correct})">
                     <span class="option-letter">${letters[optIdx]}</span>
                     <span class="option-text">${opt}</span>
                 </li>
             `;
         }).join('');
 
-        const explanationStyle = isAnswered ? 'style="display: block;"' : '';
-
         card.innerHTML = `
             <div class="question-header">
-                <span>Questão ${index + 1} de ${questions.length}</span>
-                <span>Itajaí / FEPESE</span>
+                <span>Questão ${index + 1} de ${theme.questions.length}</span>
+                <span>ID: ${q.id}</span>
             </div>
             <div class="question-text">${q.text}</div>
             <ul class="options-list">
                 ${optionsHtml}
             </ul>
-            <div class="explanation" id="exp_${q.id}" ${explanationStyle}>
-                <h4>Fundamentação & Gabarito:</h4>
+            <div class="explanation" id="exp_${q.id}">
+                <h4>Fundamentação / Comentário:</h4>
                 <p>${q.explanation}</p>
             </div>
         `;
 
         container.appendChild(card);
     });
+
+    theme.questions.forEach(q => {
+        if (userAnswers[q.id] !== undefined) {
+            applyAnswerToUI(q.id, userAnswers[q.id], q.correct);
+        }
+    });
+
+    updateStats();
 }
 
-function handleOptionClick(questionId, selectedIdx) {
-    if (userAnswers.hasOwnProperty(questionId)) return; // Already answered
+function selectOption(questionId, selectedIdx, correctIdx) {
+    if (userAnswers[questionId] !== undefined) return;
 
     userAnswers[questionId] = selectedIdx;
-    
-    // Re-render current theme questions to show answers & explanations
-    renderQuestions();
-    updateDashboard();
+    applyAnswerToUI(questionId, selectedIdx, correctIdx);
+    updateStats();
 }
 
-function updateDashboard() {
-    const questions = activeThemeQuestions[currentThemeId] || [];
-    let answeredCount = 0;
-    let correctCount = 0;
+function applyAnswerToUI(questionId, selectedIdx, correctIdx) {
+    const card = document.getElementById(`card_${questionId}`);
+    const options = card.querySelectorAll('.option-item');
+    const exp = document.getElementById(`exp_${questionId}`);
 
-    questions.forEach(q => {
-        if (userAnswers.hasOwnProperty(q.id)) {
-            answeredCount++;
+    options.forEach((opt, idx) => {
+        opt.classList.add('disabled');
+        if (idx === correctIdx) {
+            opt.classList.add('correct');
+        }
+        if (idx === selectedIdx && selectedIdx !== correctIdx) {
+            opt.classList.add('incorrect');
+        }
+    });
+
+    exp.style.display = 'block';
+}
+
+function updateStats() {
+    const currentTheme = quizData.find(t => t.themeId === currentThemeId);
+    if (!currentTheme) return;
+
+    let total = currentTheme.questions.length;
+    let answered = 0;
+    let correct = 0;
+
+    currentTheme.questions.forEach(q => {
+        if (userAnswers[q.id] !== undefined) {
+            answered++;
             if (userAnswers[q.id] === q.correct) {
-                correctCount++;
+                correct++;
             }
         }
     });
 
-    const percentage = answeredCount > 0 ? Math.round((correctCount / answeredCount) * 100) : 0;
+    let score = answered > 0 ? Math.round((correct / answered) * 100) : 0;
 
-    document.getElementById('statAnswered').textContent = `${answeredCount} / ${questions.length}`;
-    document.getElementById('statCorrect').textContent = correctCount;
-    document.getElementById('statScore').textContent = `${percentage}%`;
+    document.getElementById('statAnswered').innerText = `${answered} / ${total}`;
+    document.getElementById('statCorrect').innerText = correct;
+    document.getElementById('statScore').innerText = `${score}%`;
 }
 
-// Initialize on page load
-window.onload = initApp;
-</script>
+function resetCurrentTheme() {
+    const currentTheme = quizData.find(t => t.themeId === currentThemeId);
+    if (!currentTheme) return;
 
+    currentTheme.questions.forEach(q => {
+        delete userAnswers[q.id];
+    });
+
+    currentTheme.questions.sort(() => Math.random() - 0.5);
+
+    loadTheme(currentThemeId);
+}
+
+document.addEventListener('DOMContentLoaded', initApp);
+</script>
 </body>
 </html>
